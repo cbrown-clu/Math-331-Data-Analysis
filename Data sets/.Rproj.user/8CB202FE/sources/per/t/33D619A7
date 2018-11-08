@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1541690149525.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1795475938",
+    "id" : "33D619A7",
+    "lastKnownWriteTime" : 1541703067,
+    "last_content_update" : 1541703067074,
+    "path" : "~/GitHub/Math-331-Data-Analysis/Data sets/DatasetAcquisition.R",
+    "project_path" : "DatasetAcquisition.R",
+    "properties" : {
+        "cursorPosition" : "82,43",
+        "scrollLine" : "54",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

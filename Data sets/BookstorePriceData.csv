@@ -1,0 +1,84 @@
+Department,CourseNumber,Author,Title,Edition,BookstoreNew,BookstoreUsed,AmazonNew,AmazonUsed
+Math,110,McKeague,Intermediate Algebra: Concepts with Applications,1,75,57,71,37
+Math,115,Barnett,"Finite Mathematics for Business, Economics, Life Science, and Social Science",13,223,167,157,63
+Math,120,Beckmann,Mathematics for Elementary Teachers with Activities,4,208,156,149,65
+Math,128,Berlinghoff,A Mathematics Sampler: Topics for the Liberal Arts,5,NA,66,77,44
+Math,145,Waner,Finite Mathematics and Applied Calculus,6,341,256,279,70
+Math,151,Stewart,Precalculus,7,259,194,225,96
+Math,231,Triola,Biostatistics,1,225,169,161,36
+Math,245,Waner,Applied Calculus,6,NA,253,276,48
+Math,251,Stewart,Calculus: Early Transcendentals,8,327,245,253,113
+Math,252,Stewart,Calculus: Early Transcendentals,8,,,,
+Math,265,Logan,A First Course in Differential Equations,2,NA,60,48,18
+Biology,111,Audesirk,Biology: Life on Earth,10,230,173,177,36
+Biology,115,Mulvaney,The Great White Bear,NA,NA,20,15,3
+Biology,115,Halter,Shepherding the Sea,NA,NA,19,NA,NA
+Biology,118,Garrison,Oceanography,9,292,219,224,130
+Biology,120,Raven,Biology,10,273,205,209,44
+Biology,121,Raven,Biology,10,273,205,209,44
+Biology,122,Raven,Biology,10,273,205,209,44
+Biology,213,Dessler,Introduction to Modern Climate Change,2,65,NA,101,87
+Biology,223,Martini,Human Anatomy,8,310,NA,204,120
+Biology,224,Stanfield,Principles of Human Physiology,5,266,NA,178,55
+Chemistry,111,ACS,Chemistry in Context,8,217,163,166,65
+Chemistry,152,Reger,Chemistry,3,383,288,110,23
+ComputerScience,210,Schildt,Java,6,40,NA,22,19
+ComputerScience,220,Goodrich,Data Structures and Algorithms in Java,6,179,NA,127,73
+Physics,100,Bennett,Cosmic Perspective,7,212,159,153,27
+Physics,110,Tillery,Physical Science,10,251,189,192,43
+Physics,202,Openstax,College Physics,NA,73,55,44,24
+Physics,212,Young,University Physics with Modern Physics,13,348,261,231,45
+EXSC,202,Kenney,Physiology of Sport and Exercise,6,118,89,109,69
+Geology,111,Plummer,Physical Geology,NA,112,NA,151,19
+Geology,112,Stanley,Earth System History,4,180,135,175,92
+Geology,118,Garrison,Oceanography,9,292,219,224,130
+Geology,152,Botkin,Environmental Science,9,235,177,163,37
+Geology,212,Horner,How to Build a Dinosaur,NA,NA,13,14,1
+Geology,212,Fastovsky,Dinosaurs: A Concise Natural History,2,99,74,68,42
+Art,105,Pohl,Framing America,3,99,74,76,43
+Art,112,Stokstad,Art History,5,193,145,125,93
+Art,175,Dunn,Conversations in Paint,NA,21,16,18,1
+Bus,251,Needles,Financial Accounting,11,NA,314,440,19
+Bus,252,Garrison,Managerial Accounting,15,337,253,280,105
+Comm,101,Pavlik,Converging Media,4,112,84,65,13
+Comm,103,O'Hair,Pocket Guide to Public Speaking,5,48,36,46,39
+Comm,200,Eastman,Media Programming,9,241,181,191,70
+Comm,207,Shyles,Art of Video Production,NA,121,91,107,28
+Comm,231,Harrower,Inside Reporting,3,161,121,122,60
+Comm,231,AP,Associated Press Stylebook,NA,21,NA,14,9
+Crim,101,Schmalleger,Criminal Justice,11,163,122,137,71
+Crim,105,Schubert,Intro to Law and Legal Systems,11,226,169,173,92
+Crim,276,Scheb,Criminal Law and Procedure,8,310,233,237,125
+Econ,203,Mateer,Essentials of Economics,NA,206,NA,181,69
+English,110,Graff,They Say I Say,3,55,41,23,8
+English,201,Kundera,The Unbearable Lightness of Being,NA,18,14,11,3
+English,201,Mays,The Norton Intro to Literature (Shorter),12,90,NA,82,64
+English,202,Burroway,Imaginative Writing,4,67,50,61,37
+English,211,Powell,Homer's Iliad and Odyssey,NA,20,15,20,10
+English,216,McCarthy,The Road,NA,16,12,9,1
+English,216,Sepulveda,The Old Man Who Read Love Stories,NA,13,10,13,1
+English,216,Muir,My First Summer in the Sierra,NA,NA,6,8,4
+French,101,Valette,CME Contacts Langue Culture,NA,189,NA,147,95
+German,102,Stewart,German in Action,2,66,NA,72,60
+GLST,103,Sernau,Global Problems,3,114,86,87,51
+History,102,McKay,"A History of World Societies, Value Edition",10,NA,65,53,32
+History,122,Goldfield,American Journey,7,126,95,126,31
+Italian,101,Melucci,Piazza,NA,165,NA,121,21
+Music,101,Hoffer,Music Listening Today,5,226,170,207,7
+Music,108,Kostka,Tonal Harmony (text only),7,199,149,154,86
+Music,108,Kostka,Tonal Harmony workbook,7,121,91,92,52
+Music,114,Palmer,Alfred's Basic Adult All in one course,NA,17,13,9,NA
+Music,116,Leavitt,Berklee Basic Guitar,NA,10,NA,10,2
+Music,140,Palmer,Alfred's Basic Adult All in one course level 2,NA,17,13,10,NA
+Music,208,Ross,The Rest is Noise,NA,22,17,16,4
+Political Science,105,Schubert,Law and the Legal System,11,226,169,173,92
+Psychology,200,Nairne,Psychology,6,187,140,204,39
+Psychology,203,Oatley,Understanding Emotions,3,101,76,NA,55
+Psychology,222,Comer,Fundamentals of Abnormal Psychology,7,206,155,183,65
+Religion,100,Patel,Acts of Faith,NA,15,11,12,1
+Religion,100,Woodhead,Christianity,2,12,9,NA,7
+Religion,282,Patel,Sacred Ground,NA,15,11,14,2
+Religion,282,Mobley,My Neighbor's Faith,NA,25,19,18,3
+Sociology,103,Sernau,Global Problems (text only),3,114,86,87,51
+Sociology,200,Yarber,Human Sexuality (w/o access code),8,248,186,190,61
+Sociology,200,Stombler,Sex Matters,4,103,78,82,57
