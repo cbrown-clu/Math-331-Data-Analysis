@@ -1,0 +1,2 @@
+# Data sets for Math 331
+The data sets in this repository are provided as comma-separated value files (CSV with extension .csv) unless otherwise noted.  You can open CSV files with most spreadsheets and several commands in R, such as read.csv().
