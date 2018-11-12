@@ -1,0 +1,24 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1541806794915.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3028489275",
+    "id" : "CC024374",
+    "lastKnownWriteTime" : 1542065282,
+    "last_content_update" : 1542065282941,
+    "path" : "~/R_Projects/Probability-Simulation-Sampling/Notes-Probability-Simulation-Sampling.Rmd",
+    "project_path" : "Notes-Probability-Simulation-Sampling.Rmd",
+    "properties" : {
+        "cursorPosition" : "77,319",
+        "last_setup_crc32" : "E621C2E792573595",
+        "scrollLine" : "69",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
