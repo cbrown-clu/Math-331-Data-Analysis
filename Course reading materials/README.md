@@ -1,0 +1,2 @@
+# Course Reading Materials
+You can find the course reading materials in this folder.  This includes the three main texts - R For Beginners, Notes on Probability and Simulation, and ISLR - and supporting articles for the course.
