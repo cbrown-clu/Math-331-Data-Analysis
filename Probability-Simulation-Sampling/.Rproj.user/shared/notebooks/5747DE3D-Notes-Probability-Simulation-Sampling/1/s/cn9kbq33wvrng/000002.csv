@@ -1,0 +1,6 @@
+"0","set.seed(42)"
+"0","inputs <- runif(10000,min=0,max=5)"
+"0","f <- function(x) {"
+"0","  return(x*(1-x))"
+"0","}"
+"0","outputs <- f(inputs)"
