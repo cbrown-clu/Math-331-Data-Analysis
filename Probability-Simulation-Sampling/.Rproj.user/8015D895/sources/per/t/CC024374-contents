@@ -3,6 +3,8 @@ title: "Notes on Probability, Simulation, and Sampling"
 author: "Christopher Brown"
 date: "November 9, 2018"
 output: pdf_document
+fontsize: 12pt
+geometry: margin=4cm
 ---
 
 ```{r setup, include=FALSE}
@@ -28,7 +30,7 @@ Bayesian definition: Roughly, we determine the *probability of an event* $A$ by 
 ### Notation
 Notation in probability theory is notoriously complex, informal, and nonstandardized.  In these notes we'll try to be consistent and explain what we mean by our notation.  There will still be times when informality is helpful.
 
-We usually denote events by capital letters like $A$, $B$, and so on.  We denote the **probability of event** $A$ by $P(A)$.
+We usually denote events by capital letters like $A$, $B$, and so on.  We denote the *probability of event* $A$ by $P(A)$.
 
 When $A$ and $B$ are both events, the event "$A$ and $B$" is the set $A\cap B$.  We write $P(A\text{\ and\ }B)=P(A\cap B)$.  Many textbooks also write $P(A,B)$ for the probability of $A$ and $B$; we won't use this notation but we mention it for the sake of connecting with other works.
 
@@ -43,19 +45,19 @@ Chapters 2 and 3 of [1] contain a standard presentation of the properties of pro
 
 Suppose that $S$ is a given sample space.  Then a probability measure on $S$ is a function $P$ mapping events to real numbers, with $P$ satisfying the following three axioms:
 
-Axiom 1: For every event $A$, $0\leq P(A)\leq 1$.
+**Axiom 1**: For every event $A$, $0\leq P(A)\leq 1$.
 
-Axiom 2: $P(S)=1$.
+**Axiom 2**: $P(S)=1$.
 
-Axiom 3: For any sequence of mutually exclusive events $A_1$, $A_2$, \ldots. $A_n$,\ldots, $$P\left(\bigcup_{i=1}^{\infty}A_i\right) = \sum_{i=1}^{\infty}P(A_i)$$ 
+**Axiom 3**: For any sequence of mutually exclusive events $A_1$, $A_2$, \ldots. $A_n$,\ldots, $$P\left(\bigcup_{i=1}^{\infty}A_i\right) = \sum_{i=1}^{\infty}P(A_i)$$ 
 
 From these three axioms, we can then prove the following propositions:
 
-Proposition (Complementation Rule): $P(A^C)=1-P(A)$
+**Proposition** (Complementation Rule): $P(A^C)=1-P(A)$
 
-Proposition ($P$ is Increasing): If $A\subseteq B$ then $P(A)\leq P(B)$.
+**Proposition** ($P$ is Increasing): If $A\subseteq B$ then $P(A)\leq P(B)$.
 
-Proposition (Sum Rule): For all events $A$ and $B$,$$P(A\cup B)=P(A)+P(B)-P(A\cap B)$$
+**Proposition** (Sum Rule): For all events $A$ and $B$,$$P(A\cup B)=P(A)+P(B)-P(A\cap B)$$
 
 ### Conditional Probability
 The notion of conditional probability is probably the most important concept in probability theory.  In essence, we compute probabilities of events given different collections of information.
@@ -64,13 +66,13 @@ If $A$ and $B$ are events, then the *probability of $A$ given that $B$ occurred*
 
 Because $P(A\cap B) = P(B\cap A)$, we can now write
 
-Proposition (Bayes' Rule): $$P(A|B)=\frac{P(B|A)P(A)}{P(B)}$$
+**Proposition** (Bayes' Rule): $$P(A|B)=\frac{P(B|A)P(A)}{P(B)}$$
 
-Proposition (Conditioning on a Partition): If $B_1$, $B_2$,\ldots,$B_n$ is a collection of mutually exclusive events whose union is $S$ (a *partition* of $S$), then$$P(A)=\sum_{i=1}^nP(A|B_i)P(B_i)$$
+**Proposition** (Conditioning on a Partition): If $B_1$, $B_2$,\ldots,$B_n$ is a collection of mutually exclusive events whose union is $S$ (a *partition* of $S$), then$$P(A)=\sum_{i=1}^nP(A|B_i)P(B_i)$$
 
 Two events $A$ and $B$ are said to be *independent* if $P(A|B)=P(A)$.  That is, $A$ and $B$ are independent if the computation of the probability of $A$ does not change whether we know $B$ happened or not.
 
-Proposition: $A$ and $B$ are independent events if and only if $P(A\cap B)=P(A)P(B)$.
+**Proposition**: $A$ and $B$ are independent events if and only if $P(A\cap B)=P(A)P(B)$.
 
 ### Random Variables
 A *random variable* is a function mapping events in a sample space to real numbers.  We often think of random variables as measurements of quantities of interest in an experiment.  For example, if our experiment is to flip a fair coin 20 times, then one random variable might be $X$=number of Heads in the 20 flips.  Here, the range of $X$ is $\{0,\ldots,20\}$.
