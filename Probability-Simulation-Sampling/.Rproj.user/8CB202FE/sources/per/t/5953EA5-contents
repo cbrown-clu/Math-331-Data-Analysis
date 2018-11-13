@@ -14,10 +14,20 @@ knitr::opts_chunk$set(echo = TRUE,
 ```
 
 ## Introduction
+These notes are written for the Math 331 Data Analysis With R course, and are a quick overview of three areas at the boundary between mathematics and computer science.  The goals of these notes are:
 
+* Introduce probability terminology and theory
+
+* Introduce the notion of a simulation approach to problem solving and provide examples
+
+* Give an "under-the-hood" glance at some techniques for algorithmically generating random samples.
+
+* Provide some practical examples for using R for simulations and sampling
+
+\newpage
 ## Probability
 
-### Terminology
+### Terminology and Notation
 
 An *event space* or *sample space* $S$ is a nonempty set.  An *event* is a subset of the given sample space.  Visually, we can represent events in sample spaces as .
 
@@ -27,7 +37,6 @@ Frequentist definition: Roughly, we determine the *probability of an event* $A$ 
 
 Bayesian definition: Roughly, we determine the *probability of an event* $A$ by evaluating the credibility we have in the occurrence of $A$ given our observations of the system.  For example, if we have not flipped a coin, we might give equal credibility to Heads and Tails for the next flip.  We base this on the fact that most coins in our experience seem to be fiar.  On the other hand, if we have already flipped that coin 10 times and seen 10 heads, we might give more credibility to Heads than Tails for the next flip, because we suspect the coin may be biased.
 
-### Notation
 Notation in probability theory is notoriously complex, informal, and nonstandardized.  In these notes we'll try to be consistent and explain what we mean by our notation.  There will still be times when informality is helpful.
 
 We usually denote events by capital letters like $A$, $B$, and so on.  We denote the *probability of event* $A$ by $P(A)$.
@@ -53,11 +62,11 @@ Suppose that $S$ is a given sample space.  Then a probability measure on $S$ is 
 
 From these three axioms, we can then prove the following propositions:
 
-**Proposition** (Complementation Rule): $P(A^C)=1-P(A)$
+**Proposition 4** (Complementation Rule): $P(A^C)=1-P(A)$
 
-**Proposition** ($P$ is Increasing): If $A\subseteq B$ then $P(A)\leq P(B)$.
+**Proposition 5** ($P$ is Increasing): If $A\subseteq B$ then $P(A)\leq P(B)$.
 
-**Proposition** (Sum Rule): For all events $A$ and $B$,$$P(A\cup B)=P(A)+P(B)-P(A\cap B)$$
+**Proposition 6** (Sum Rule): For all events $A$ and $B$,$$P(A\cup B)=P(A)+P(B)-P(A\cap B)$$
 
 Example: Suppose that our experiment is to flip a fair coin twice and record the faces showing on each flip, in order.  In this experiment, there are some events - like $A$="Heads, then Tails" - that are not further divisible into events, because there are no events that are proper nonempty subsets of $A$.  Any event that has no proper nonempty subsets as events is called *atomic*.  (There are other events that can be further subdivided, e.g. $B$="Flip Heads on at least one flip" has $A$ as a proper subset.)
 
@@ -86,31 +95,34 @@ If $A$ and $B$ are events, then the *probability of $A$ given that $B$ occurred*
 
 Because $P(A\cap B) = P(B\cap A)$, we can now write
 
-**Proposition** (Bayes' Rule): $$P(A|B)=\frac{P(B|A)P(A)}{P(B)}$$
+**Proposition 7** (Bayes' Rule): $$P(A|B)=\frac{P(B|A)P(A)}{P(B)}$$
 
-**Proposition** (Conditioning on a Partition): If $B_1$, $B_2$,\ldots,$B_n$ is a collection of mutually exclusive events whose union is $S$ (a *partition* of $S$), then$$P(A)=\sum_{i=1}^nP(A|B_i)P(B_i)$$
+**Proposition 8** (Conditioning on a Partition): If $B_1$, $B_2$,\ldots,$B_n$ is a collection of mutually exclusive events whose union is $S$ (a *partition* of $S$), then$$P(A)=\sum_{i=1}^nP(A|B_i)P(B_i)$$
 
 Two events $A$ and $B$ are said to be *independent* if $P(A|B)=P(A)$.  That is, $A$ and $B$ are independent if the computation of the probability of $A$ does not change whether we know $B$ happened or not.
 
-**Proposition**: $A$ and $B$ are independent events if and only if $P(A\cap B)=P(A)P(B)$.
+**Proposition 9**: $A$ and $B$ are independent events if and only if $P(A\cap B)=P(A)P(B)$.
 
 ### Random Variables
 A *random variable* is a function mapping events in a sample space to real numbers.  We often think of random variables as measurements of quantities of interest in an experiment.  For example, if our experiment is to flip a fair coin 20 times, then one random variable might be $X$=number of Heads in the 20 flips.  Here, the range of $X$ is $\{0,\ldots,20\}$.
+
+In this example, we denote the event "we saw 1 Heads in the 20 flips" as $X=1$.  The notation $X=1$ should be interpreted to mean "all of the events in the sample space $S$ which, when measured by $X$, produce an output of 1".  (For those of you with some advanced mathematics under your belt, $X=1$ is one way to write the inverse image of the output 1 under the function $X$, i.e. the set $X^{-1}(1)$.)  *It is very important to understand that when we write $X=1$ or $X\leq 10$, these are just notations describing certain events, and we should treat them just as we would any other event!*
 
 As a second example, if our experiment is to repeatedly flip a fair coin until the first occurrence of Heads, then a random variable might be $X$=number of Tails appearing before the first Heads appears.  In this example, the range of $X$ is $\{ 0, 1,\ldots\}$, and so the range of a random variable need not be finite.
 
 A random variable is *discrete* if its range is made up of numbers separated by gaps, with the smallest gap being positive.  For example, if the range of $X$ is $\{1,2,3\}$ or $\{2,4,6,8,\ldots\}$, $X$ is a discrete random variable.  Otherwise, the random variable is said to be *continuous*.
 
-Given a discrete random variable $X$, the *probability mass function* for $X$ is the function $f(x)=P(X=x)$, and the *distribution function* is$$F(x)=P(X\leq x)=\sum_{z\leq x}f(z)$$
+Given a discrete random variable $X$, the *probability mass function* for $X$ is the function $f(x)=P(X=x)$, and the *distribution function* is$$F(x)=P(X\leq x)=\sum_{z\leq x}f(z)$$We note in this case that if $x_1<x_2$ and no value in the range of $X$ is between $x_1$ and $x_2$ then we have $F(x_2)-F(x_1)=f(x_2)$.  So, we can create the density function $f$ from the distribution and vice versa.
 
-Given a continuous random variable $X$, the *probability density function* for $X$ is the function $f(x)$ such that$$P(X\leq x)=\int_{-\infty}^xf(z)\, dz$$and the *continuous distribution function* for $X$ is the function$$F(x)=P(X\leq x)=\int_{-\infty}^xf(z)\, dz$$In the language of calculus, $F'(x)=f(x)$, so the rate of change of the distribution is the density.
+Given a continuous random variable $X$, the *probability density function* for $X$ is the function $f(x)$ such that$$P(X\leq x)=\int_{-\infty}^xf(z)\, dz$$and the *continuous distribution function* for $X$ is the function$$F(x)=P(X\leq x)=\int_{-\infty}^xf(z)\, dz$$In the language of calculus, $F'(x)=f(x)$, so the rate of change of the distribution is the density.  Thus we can create the density from the distribution and the distribution from the density.
 
-In both the discrete and continuous cases, the distribution is a sort of sum of the density or mass, and the density or mass is a change in the distribution.
+In both the discrete and continuous cases, the distribution is a sort of sum of the density or mass, and the density or mass function is a change in the distribution.
 
 ### Exercises
 
+\newpage
 ## Simulation
-When we *simulate* an experiment, we program the rules of an experiment and some initial conditions into a computer, and then we perform the experiment.  Generally, simulated experiments are cheap and highly repeatable.  However, they do require us to understand the rules for the experiment very well.  So for many questions in probability, simulation can be a highly effective tool because in asking the probability question, we define the rules of the experiment!  Some questions in the natural, physical, and social sciences can be approached by simulation experiments, but care must be taken in interpreting the result.
+When we *simulate* an experiment, we program the rules of an experiment and some initial conditions into a computer, and then we perform the experiment.  Generally, simulated experiments are cheap and highly repeatable.  However, they do require us to understand the rules for the experiment very well.  So for many questions in probability, simulation can be a highly effective tool because in asking the probability question, we define the rules of the experiment!  Some questions in the natural, physical, and social sciences can be approached by simulation experiments, but care must be taken in interpreting the results.
 
 ### Random Number Generators in R
 Probability simulations generally require a random number generator.  Chapter 2 of [3] contains a wealth of information, both historical and technical, on random number generation in digital computers.  This is a beautiful and absolutely essential topic at the boundary of mathematics and computer science.
@@ -251,7 +263,45 @@ Symbolically, we have six 7's out of 36 outcomes, i.e.
 ```
 So our estimate is certainly good enough for government work.  If we need to how can we improve our estimate?
 
-### Longer Example: Professor Z's Office Hours
+### Example: A Walk With a Coin
+My son is standing on a long, straight sidewalk running east and west.  I give him a fair coin and the following procedure:
+
+Step 1: Take 1 step east.
+Step 2: Flip the coin.  If Heads, take two more steps east.  If Tails, take two steps west.
+
+After 100 steps, where is he likely to be?  We know that he could be anywhere from 100 steps west to 300 steps east, but how likely are any of those possibilities?
+
+Let's model this with steps east being represented by positive numbers and steps west represented by negative numbers.  We can simulate one trip fairly easily.
+```{r}
+set.seed(42)
+coin_flips <- sample(c(-1,1),100,replace=TRUE)
+extra_steps <- 2*coin_flips
+location <- cumsum(1+extra_steps)
+plot(location)
+```
+The final location is the data we really wish to collect.
+```{r}
+tail(location,1)
+```
+Let's now write a function to perform one trip and then repeat that.
+```{r}
+set.seed(42)
+number_of_trips <- 10000
+one_trip <- function() {
+  coin_flips <- sample(c(-1,1),100,replace=TRUE)
+  extra_steps <- 2*coin_flips
+  location <- cumsum(1+extra_steps)
+  return(tail(location,1))
+}
+data <- sapply(1:number_of_trips,function(z) one_trip())
+```
+Let's examine the data.
+```{r}
+hist(data,breaks=60,col='blue')
+```
+How do we interpret this histogram?
+
+### Example: Professor Z's Office Hours
 Professor Z tries to show up at his office for appointments on time.  He really does!  But students and faculty frequently stop him to ask questions or just chat, and he is a typical absent-minded professor, so sometimes he is late.
 
 Estrella is trying to meet Professor Z at his office for an appointment.  She really is!  But between traffic and campus parking, Estrella might be late.
@@ -334,8 +384,59 @@ inputs[index]
 ```
 Can you convince yourself that this is (approximately) the right answer?
 
+### Example: Area Under a Curve
+Let's suppose that we want to compute the area under the curve $f(x)=x(1-x)$ on the interval $[0,1]$.  Graphically, we are trying to compute the area shown below:
+```{r}
+X <- seq(from=0,to=1,by=0.01)
+f <- Vectorize(
+  function(x) {
+    return(x*(1-x))
+  }
+)
+Y <- f(X)
+plot(X,Y,type='l',lwd=4)
+XX <- c(X,rev(X))
+YY <- c(Y,rep(0,length(X)))
+polygon(XX,YY,col='red')
+```
+So, how can we do this?  The thinking is to throw darts randomly at the graph above, compute the proportion of the darts that land in the area, and then use that to compute the area of the shaded region.
+
+First, let's get the coordinates of our darts.
+```{r}
+xmin <- 0
+xmax <- 1
+ymin <- 0
+ymax <- 0.3
+number_of_darts <- 10000
+X <- runif(number_of_darts,min=xmin,max=xmax)
+Y <- runif(number_of_darts,min=ymin,max=ymax)
+```
+Let's also compute the area of the image.
+```{r}
+image_area <- (xmax-xmin)*(ymax-ymin)
+image_area
+```
+We now need to check to see which darts fall in the shaded region.  A dart will fall in the region exactly when the $y$ coordinate of the dart is smaller than the $y$ coordinate of the graph at that $x$ coordinate, i.e. exactly when $y\leq f(x)$.
+```{r}
+darts_in_region <- length(which(Y <= f(X)))
+```
+We now compute the proportion of darts in the shaded region.
+```{r}
+darts_in_region/number_of_darts
+```
+So about 55.4\% of the darts fell in the shaded region, which tells us that the shaded region takes up about 55.4\% of the image area 0.3.  We can then estimate the area of the shaded region as
+```{r}
+darts_in_region/number_of_darts * image_area
+```
+It's worth noting that elementary calculus tells us that the exact answer is
+```{r}
+integrate(f,lower=0,upper=1)
+```
+So our darts estimate is quite good.  Computationally, it does not beat the standard numerical integration techniques as long as we have, but it may be helpful in other ways.
+
 ### Exercises
 
+\newpage
 ## Sampling
 In this section we will dig a little more deeply into how random number generators for various distributions can be programmed.  This section is a little sparser, but contains links to lots of useful web content.
 
@@ -480,10 +581,58 @@ hist(draws,breaks=60)
 ```
 The benefit of this approach over sampling from the original data set is that the approximating density function has smoothed out the data.  We now get some data points in the gaps in between the values in the original data set.  This fits our mental model of flow rates of the Nile; there's no reason that the river may have a flow rate of 702 one year and 714 another year, but never 710.  If we sample from the original data set we'll never draw a sample value of 710, but with the smoothed density, we might.
 
-### Acceptance-Rejection Sampling
+### Rejection Sampling
+Since we already have a sampling method, why introduce another?  Well, inversion sampling works quite efficiently for a single random variable but not for multivariable scenarios.
+
+Instead, we'll use a technique called *rejection sampling* (or sometimes "acceptance-rejection sampling").  This technique is quite similar to the darts-throwing technique we used to estimate integrals earlier.  The idea is that we will throw a "dart" into a region with a density function.  If the dart falls under the graph of the density function, we will accept the appropriate coordinates of the dart as a sample point, and if the dart fals above the graph of the density function we will reject the dart for our sample and move on to another.
+
+Let's begin by defining a density function.  We start with a shape.
+```{r}
+f_temp <- function(x1,x2) {
+  if (x1>=0 & x1<=2 & x2>=0 & x2<=2) {
+    return(5*exp(-x1-x2))
+  } else {
+    return(0)
+  }
+}
+```
+We want the volume under this to be 1.  Let's throw darts to find the current volume!
+```{r}
+set.seed(42)
+number_of_darts <- 100000
+X1 <- runif(number_of_darts,min=0,max=2)
+X2 <- runif(number_of_darts,min=0,max=2)
+Y <- runif(number_of_darts,min=0,max=5)
+outputs <- sapply(1:length(X1),function(j) f_temp(X1[j],X2[j]))
+volume <- length(which(Y<=outputs))/number_of_darts * 2*2*5
+volume
+```
+And now we can scale our function so that it is a proper density function, i.e. integrates to 1.
+```{r}
+f <- function(x1,x2) {
+  return(f_temp(x1,x2)/volume)
+}
+```
+At this point we have a density function and we can perform rejection sampling.  Much of this code will look similar to the code we used to create darts.  Pay attention to the $y$ values, though!  Let's draw a sample of 1000 points.
+```{r}
+set.seed(42)
+number_of_darts <- 5000
+X1 <- runif(number_of_darts,min=0,max=2)
+X2 <- runif(number_of_darts,min=0,max=2)
+Y <- runif(number_of_darts,min=0,max=1)
+outputs <- sapply(1:length(X1),function(j) f_temp(X1[j],X2[j]))
+keepers <- which(Y<=outputs)
+x1 <- X1[keepers]
+x2 <- X2[keepers]
+plot(x1,x2)
+```
+Note the heavier clustering near $(0,0)$.  The density function is maximal there, and so we should expect tighter clustering in our sample.
+
+There are a number of ways to improve a rejection sampling scheme.  Chapter 2 in [3] has more details on rejection sampling, and chapter 2 in [4] has several examples of designing sampling algorithms using inversion schemes and in some cases and rejection sampling in others.
 
 ### Exercises
 
+\newpage
 ## References
 
 [1] Ross.  **A First Course in Probability: Fifth Edition**.  Prentice-Hall, 1998.
@@ -496,5 +645,5 @@ The benefit of this approach over sampling from the original data set is that th
 
 [5] Gamerman, Lopes.  **Markov Chain Monte Carlo: Stochastic Simulation for Bayesian Inference, Second Edition**.  Chapman and Hall/CRC, 2006.
 
-[6] Pilon.  **Probabilistic Programming and Bayesian Methods for Hackers**.  Find this at https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers .
+[6] Pilon.  **Probabilistic Programming and Bayesian Methods for Hackers**.  Find this at [https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers](https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers).
 

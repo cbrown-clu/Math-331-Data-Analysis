@@ -1,7 +1,0 @@
-"0","countem <- function(data,x) {"
-"0","  sum(data==x)"
-"0","}"
-"0","X <- 0:max(spots)"
-"0","temp <- sapply(X,function(z) countem(spots,z))"
-"0","f <- temp/sum(temp)"
-"0","barplot(f)"
