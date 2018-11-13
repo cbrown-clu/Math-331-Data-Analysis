@@ -1,2 +1,0 @@
-"0","data <- sapply(1:number_of_experiments,"
-"0","               function(z) one_roll())"

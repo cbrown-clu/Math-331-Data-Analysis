@@ -1,0 +1,2 @@
+"0","draws=sample(spots,1000,replace=TRUE)"
+"0","hist(draws,breaks=60)"

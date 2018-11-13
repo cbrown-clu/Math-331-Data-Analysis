@@ -1,0 +1,3 @@
+"0","location <- which.min(abs(Y-y))"
+"0","the_draw <- X[location]"
+"0","plot(X,Y)"

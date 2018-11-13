@@ -5,16 +5,16 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "1585472600",
+    "hash" : "435833821",
     "id" : "5953EA5",
-    "lastKnownWriteTime" : 1542081994,
-    "last_content_update" : 1542081994265,
+    "lastKnownWriteTime" : 1542122243,
+    "last_content_update" : 1542122243544,
     "path" : "~/GitHub/Math-331-Data-Analysis/Probability-Simulation-Sampling/Notes-Probability-Simulation-Sampling.Rmd",
     "project_path" : "Notes-Probability-Simulation-Sampling.Rmd",
     "properties" : {
-        "cursorPosition" : "337,891",
-        "last_setup_crc32" : "C5ACB49092573595",
-        "scrollLine" : "326"
+        "cursorPosition" : "1,8",
+        "last_setup_crc32" : "7DB57FB192573595",
+        "scrollLine" : "0"
     },
     "relative_order" : 1,
     "source_on_save" : false,

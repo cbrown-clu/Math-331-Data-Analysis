@@ -1,0 +1,3 @@
+"0","X <- seq(from=-3,to=3,by=0.01)"
+"0","Y <- pnorm(X)"
+"0","plot(X,Y)"

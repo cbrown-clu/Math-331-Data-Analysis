@@ -1,5 +1,5 @@
 ---
-title: "Notes on Probability, Simulation, and Sampling"
+title: "Probability, Simulation, and Sampling"
 author: "Christopher Brown"
 date: "November 9, 2018"
 output: pdf_document
@@ -98,6 +98,14 @@ Two events $A$ and $B$ are said to be *independent* if $P(A|B)=P(A)$.  That is, 
 A *random variable* is a function mapping events in a sample space to real numbers.  We often think of random variables as measurements of quantities of interest in an experiment.  For example, if our experiment is to flip a fair coin 20 times, then one random variable might be $X$=number of Heads in the 20 flips.  Here, the range of $X$ is $\{0,\ldots,20\}$.
 
 As a second example, if our experiment is to repeatedly flip a fair coin until the first occurrence of Heads, then a random variable might be $X$=number of Tails appearing before the first Heads appears.  In this example, the range of $X$ is $\{ 0, 1,\ldots\}$, and so the range of a random variable need not be finite.
+
+A random variable is *discrete* if its range is made up of numbers separated by gaps, with the smallest gap being positive.  For example, if the range of $X$ is $\{1,2,3\}$ or $\{2,4,6,8,\ldots\}$, $X$ is a discrete random variable.  Otherwise, the random variable is said to be *continuous*.
+
+Given a discrete random variable $X$, the *probability mass function* for $X$ is the function $f(x)=P(X=x)$, and the *distribution function* is$$F(x)=P(X\leq x)=\sum_{z\leq x}f(z)$$
+
+Given a continuous random variable $X$, the *probability density function* for $X$ is the function $f(x)$ such that$$P(X\leq x)=\int_{-\infty}^xf(z)\, dz$$and the *continuous distribution function* for $X$ is the function$$F(x)=P(X\leq x)=\int_{-\infty}^xf(z)\, dz$$In the language of calculus, $F'(x)=f(x)$, so the rate of change of the distribution is the density.
+
+In both the discrete and continuous cases, the distribution is a sort of sum of the density or mass, and the density or mass is a change in the distribution.
 
 ### Exercises
 
@@ -337,10 +345,140 @@ Here is some information about the "built-in" distributions in R: https://stat.e
 ### The Monte Carlo Method
 The Monte Carlo method is really not a method, but an entire class of computational algorithms that focus on answering questions through simulation.  Read more here: https://en.wikipedia.org/wiki/Monte_Carlo_method .  (As a point of interest, I was supported by Stan Ulaw's seminar and scholarship as a graduate student.)  References [3] and [4] contain some excellent material discussing Monte Carlo methods.  Reference [4] contains code and excellent exercises written in Matlab; Python users using the numpy and pylab packages will find this highly approachable.  [5] is a more advanced mathematical text, aimed at clarifying the connections between Monte Carlo methods and the Bayesian approach to statistical analysis.  [6] moves in the computational direction instead, clarifying the connections between Monte Carlo methods and the Bayesian approach using Python and the pymc3 package.
 
-In the simulation section of these notes we have seen examples of estimatng probabilities through simulation and optimizing functions through simulation.  However, we have not really seen simulations used to generate samples from distributions.  That is, how do computer programs work "under the hood"?  How does R generate 10000 draw from a beta distribution?  We'll tackle this in the next two sections.
+In the simulation section of these notes we have seen examples of estimating probabilities through simulation and optimizing functions through simulation.  However, we have not really seen simulations used to generate samples from distributions of continuous random variables.  How do computer programs work "under the hood"?  How does R generate 10000 draws from a beta distribution?  We'll tackle this in the next two sections.
 
 ### Inversion Sampling
+Suppose that $X$ is a continuous random variable with distribution function $F(x)=P(X\leq x)$.  Then $F$ is an increasing function of $x$, and will have an "s shape",similar to the following.
+```{r}
+X <- seq(from=-3,to=3,by=0.01)
+Y <- pnorm(X)
+plot(X,Y)
+```
+These curves are sometimes called *s-shaped* curves, informally.
 
+Let's note three facts about this distribution function $F$.  First,$$\lim_{x\to -\infty}F(X)=0$$Second,$$\lim_{x\to\infty}F(x)=1$$And third, $F$ is an invertible function.
+
+Inversion sampling uses these three facts and the random number number generator for the uniform distribution on $[0,1]$.  The process is as follows:
+
+Set-up:  You'll need your distribution function in some format.  For this example I'll take mine to be written in the vectors of $X$ and $Y$ coordinates used to generate the graph above.
+
+Step 1: Draw a random number from the uniform distribution on $[0,1]$.  This will represent a random output of your distribution function, so I will call mine $y$.
+```{r}
+y <- runif(1)
+```
+
+Step 2: We think of plotting $y$ on the vertical axis in the graph above and then finding the $x$ value corresponding to it.
+```{r}
+set.seed(42)
+plot(X,Y)
+abline(h=y,col='red')
+```
+Typically this involves some sort of search through a list.  We can visualize this as finding the $x$-coordinate in the distribution corresponding to the $y$ coordinate we drew.
+```{r}
+location <- which.min(abs(Y-y))
+the_draw <- X[location]
+plot(X,Y)
+abline(h=y,col='red')
+abline(v=the_draw,col='blue')
+```
+Here we have drawn a sample value of `r the_draw`.  If we repeat this many times, we generate many draws from the distribution.
+```{r}
+set.seed(42)
+y <- runif(1000)
+find_X <- function(y) {
+  location <- which.min(abs(Y-y))
+  return(X[location])
+}
+draws <- sapply(y,find_X)
+```
+Our data is in the variable draws; what does it look like?
+```{r}
+hist(draws,breaks=40)
+```
+Our sample seems to fall roughly into the shape of a normal distribution.  Because our random variable was normal, this seems like a good confirmation of this sampling technique.
+
+How does this work for discrete random variables and for data?  As an example, let's look at the yearly sunspot data set in R.
+```{r}
+data(sunspot.year)
+spots <- ceiling(sunspot.year)
+head(spots)
+```
+This is just the number of sunspots recorded each year, in order from 1700 to 1988.  Let's first find the mass function.
+```{r}
+countem <- function(data,x) {
+  sum(data==x)
+}
+X <- 0:max(spots)
+temp <- sapply(X,function(z) countem(spots,z))
+f <- temp/sum(temp)
+barplot(f)
+```
+We can now find the distribution function by summing.
+```{r}
+Y <- cumsum(f)
+plot(X,Y)
+```
+And now that we have the distribution we can perform inversion sampling as we did for the normal distribution.
+```{r}
+set.seed(42)
+y <- runif(1000)
+find_X <- function(y) {
+  location <- which.min(abs(Y-y))
+  return(X[location])
+}
+draws <- sapply(y,find_X)
+hist(draws,breaks=60)
+```
+This looks similar to our original distribution of sunspots, so it seems good.
+
+However, I have to stress that this is definitely not the most efficient way to sample from data representing a discrete random variable; it's a "hypothetically, we could..." discussion.  The easiest approach is to just use the sample function on your original data set!  The procedure we ran through is more or less what R does under the hood with the sample function.
+```{r}
+draws=sample(spots,1000,replace=TRUE)
+hist(draws,breaks=60)
+```
+
+Okay, but what if our random variable is continuous and we wish to sample from it?  Let's examine the Nile River water flow data set.
+```{r}
+data(Nile)
+head(Nile)
+```
+
+```{r}
+hist(Nile)
+```
+We can fit a smooth density function to the Nile data.  (Use ?density in R to read more about this function.)
+```{r}
+Nile_density <- density(Nile)
+plot(Nile_density)
+```
+
+```{r}
+Nile_approx <- approxfun(Nile_density)
+f <- function(x){
+  if (x<min(Nile) | x>max(Nile)) {
+    r <- 0
+  } else {
+    r <- Nile_approx(x)
+  }
+  return(r)
+}
+f <- Vectorize(f)
+X <- min(Nile):max(Nile)
+Y <- sapply(X,function(z) integrate(f,lower=-Inf,upper=z,stop.on.error = FALSE)$value)
+plot(X,Y)
+```
+We can now sample from this distribution function using inversion sampling.
+```{r}
+set.seed(42)
+y <- runif(1000)
+find_X <- function(y) {
+  location <- which.min(abs(Y-y))
+  return(X[location])
+}
+draws <- sapply(y,find_X)
+hist(draws,breaks=60)
+```
+The benefit of this approach over sampling from the original data set is that the approximating density function has smoothed out the data.  We now get some data points in the gaps in between the values in the original data set.  This fits our mental model of flow rates of the Nile; there's no reason that the river may have a flow rate of 702 one year and 714 another year, but never 710.  If we sample from the original data set we'll never draw a sample value of 710, but with the smoothed density, we might.
 
 ### Acceptance-Rejection Sampling
 
