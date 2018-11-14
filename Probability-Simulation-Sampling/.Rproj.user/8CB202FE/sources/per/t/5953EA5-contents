@@ -95,7 +95,7 @@ If $A$ and $B$ are events, then the *probability of $A$ given that $B$ occurred*
 
 Because $P(A\cap B) = P(B\cap A)$, we can now write
 
-**Proposition 7** (Bayes' Rule): $$P(A|B)=\frac{P(B|A)P(A)}{P(B)}$$
+**Proposition 7** (Bayes' Theorem): $$P(A|B)=\frac{P(B|A)P(A)}{P(B)}$$
 
 **Proposition 8** (Conditioning on a Partition): If $B_1$, $B_2$,\ldots,$B_n$ is a collection of mutually exclusive events whose union is $S$ (a *partition* of $S$), then$$P(A)=\sum_{i=1}^nP(A|B_i)P(B_i)$$
 
@@ -118,7 +118,66 @@ Given a continuous random variable $X$, the *probability density function* for $
 
 In both the discrete and continuous cases, the distribution is a sort of sum of the density or mass, and the density or mass function is a change in the distribution.
 
+### Expectation and Variance
+The *expected value of a discrete random variable* $X$, $E(X)$, is given by the formula$$E(X)=\sum_xxp(x)$$where $p$ is the probability mass function of $X$ and this summ is computed over all $x$ values in the range of $X$.  For example, if the random variable has mass given by the table
+\begin{center}
+\begin{tabular}{c|c}$X=$ & $p(x)$\\ \hline 0 & 0.1\\ 1 & 0.6\\ 2 & 0.3\\ \hline
+\end{tabular}
+\end{center}
+then we may compte the expected value of $X$ as$$E(X) = 0*0.1+1*0.6+2*0.3 = 1.2$$
+
+The expected value of $X$ is a measure of the "center", "mean", or "average" of $X$, in the following sense.  Suppose we repeat the experiment generating the random variable $X$ many times and collect the data.  We can do this in R by bulding a sample space with the correct proportions of outputs, and then sampling from it.  Here, the outputs 0, 1, and 2 should be in the ratios 1:6:3, so we build a sample space with 1 "0", 6 "1"'s, and 3 "2"'s.  I somewhat arbitrarily decided to draw a million samples.
+```{r}
+data <- sample(c(0,1,1,1,1,1,1,2,2,2),1000000,replace=TRUE)
+```
+(We will look more closely at the sample function in R in the next section.  If you are curious now, go look it up!)  We can now compute the mean value for this data set.
+```{r}
+mean(data)
+```
+We get (a very close approximation to) the expected value.  So, the expected value measures the average numerical outcome we should expect to get after many repetitions of the experiment generating $X$.
+
+We can also compute the expected value of quantities computed from the random variable $X$.  Suppose that $g:\mathbb{R}\to\mathbb{R}$.  Then the expected value of $g(X)$ is defined to be$$E(g(X))=\sum_xg(x)p(x)$$where $p$ is the mass function for $X$ and the sum is taken over all $x$ in the range of $X$.  For example, $$E(X^2)=\sum_xx^2p(x)$$.
+
+If we are dealing with a single random variable $X$, we (by tradition) denote $E(X)$ by the Greek letter *mu*, $\mu$.
+
+Another measurement we can make about a random variable is the average deviation of the values of the random variable from the center, $E(|X-\mu|)$.  It turns out that in practice, a more mathematically tractable quantity is the average square deviation of the values of $X$ from its center, called the *variance of* $X$, denoted $V(X)$, and defined by$$\sigma^2=V(X)=E((X-\mu)^2)=\sum_x(x-\mu)^2p(x)$$(where $\sigma$ is the greek letter *sigma* and is used by long tradition).  The square root of this quantity has the same physical units as $X$, and so it is often convenient to compute $\sigma=\sqrt{V(X)}$, which is called the *standard deviation of* $X$.
+
 ### Exercises
+**Exercise ** Suppose that we flip a fair coin 5 times and record the face showing after each flip. (a) How large is the sample space for this experiment?  (b) Write examples of two elements of the sample space.  (c) How many of the elements of the sample space begin with a Heads?  (d) How many of the elements of this sample space begin with a Tails?  (e) How many of the elements of the sample space begin with a Heads and end with a Tails?  (f) Are the events "Begins with a Heads" and "Begins with a Tails" mutually exclusive?  (g) Are the events "Begins with a Heads" and "Ends with a Tails" mutually exclusive?
+
+**Exercise ** For a certain species of cat, the number of young produced each year per mother is a random variable $X$.  Current data suggests that $X$ has the mass function
+\begin{center}
+\begin{tabular}{c|c}$X=$ & $p(x)$\\ \hline
+0 & 0.3\\ 1 & 0.5\\ 2 & 0.15\\ 3 & 0.05\\ \hline
+\end{tabular}
+\end{center}
+(a) What is the probability that a mother cat has 2 or more young in a given year?  (b) What is the probability that a mother cat has at least one young in a given year?  (c) What is the expected number of young for a mother cat in a year?  (d) What is the variance in the number of young for a mother cat in a year?  (e) A similar species of cat has $Y$ young per year per mother, where $Y$ has the mass function
+\begin{center}
+\begin{tabular}{c|c}$Y=$ & $p(y)$\\ \hline
+0 & 0.2\\ 1 & 0.5\\ 2 & 0.15\\ 3 & 0.1\\ 4 & 0.05\\ \hline
+\end{tabular}
+\end{center}
+How do the mean and variance of $Y$ compare to $X$?  What about the mass functions would suggest this with no calculations?  (f) Use R to build a sample space for $X$, draw a large sample, and compute the mean and variance of the sample as we did earlier in the notes.  You'll want to use the *mean* and *var* functions in R.  (g) Repeat (f) fpr the random variable $Y$.
+
+**Exercise ** Suppose that $X$ is a random variable that only produces one output, $c$, and $p(c)=1$ (so, $X$ isn't very random, is it?).  What are the expected value and variance of $X$?
+
+**Exercise ** Suppose that $X$ is a random variable with mass function
+\begin{center}
+\begin{tabular}{c|c}$X=$ & $p(x)$\\ \hline
+0 & 0.3\\ 1 & 0.5\\ 2 & 0.15\\ 3 & 0.05\\ \hline
+\end{tabular}
+\end{center}
+(a) Compute the probability $P(X\geq 2|X\neq 0)$.  (b) Compute the probability $P(X=0|X<3)$.  (c) Compute the probability $P(X=0|X=3)$.  (d) Are $X=0$ and $X=3$ mutually exclusive events?  Explain.  (e) Are $X=0$ and $X=3$ independent events?  Explain.  (f) So, does "mutually exclusive" mean the same thing as "independent"?
+
+**Exercise ** Show that if $A$ and $B$ are mutually exclusive events then $P(A\cup B)=P(A)+P(B)$.
+
+**Exercise ** Suppose that we flip a fair coin twice in a row, in such a way that the two flips are independent of one another, and thus the events $X_1=$Heads on flip 1 and $X_2=$Heads on flip 2 are independent events.  (a) What is the probability $P(X_1\cap X_2)$?  (b) If we continue this on out for a while, what is the probability $P(X_1\cap\ldots\cap X_n)$?  (c) What is the probability of flipping at least one Tail in $n$ flips?  (Hint: the complement of the event "at least one Tail" is "no Tails".)
+
+**Exercise ** Bayes' Theorem is often interpreted in the following way.  We think of $P(A)$ as our belief about the probability of $A$, before we have observed an event $B$, and we think about $P(A|B)$ as our belief about the probability of $A$, after we have observed an event $B$.  So we often call $P(A)$ a *prior* probability and $P(A|B)$ a *posterior* probability.  $P(B|A)$ is the likelihood that we actually observe $B$ given that $A$ occurs, and so is called the *likelihood*.  Then Bayes' Theorem reads as "the posterior is directly proportional to the product of the likelihood and the prior".  That is, we can update our estimation of the probability of $A$ by playing a hypothetical game: "if $A$ were actually to occur, then the likelihood of $B$ is \ldots " and combining the results with our prior belief about the probability of $A$.  To put this on a slightly more concrete  footing, think of $A$ as the hypothesis in an experiment, and $B$ as some data we will observe.  Then we can update our belief in the hypothesis $A$ based on collected data $B$ by using Bayes' Theorem.  Sounds sort of like\ldots science!
+
+Suppose we have a coin, and we have the hypothesis $A$=the coin is fair.  To test this we decide to flip the coin 10 times.  (a) Compute the prior $P(A)$.  (b) Compute the likelihood $P(B|A)$.  (c) Unfortunately at this point, it is exceedingly difficult to compute $P(B)$.  Why?  What did we know in part (b) that we do not know now?
+
+Part (c) leads us into a very deep rabbit hole called Bayesian methods in statistics.  They are generally quite flexible and produce easily interpretable results\dots but most of the time we can not compute in the Bayesian framework by hand.  Bayesian methods really only became common in the late 1990's, but since then have seen an explosion in adoption; they are considered essential tools by many ecologists, biologists, and market analysts.
 
 \newpage
 ## Simulation
@@ -639,7 +698,7 @@ There are a number of ways to improve a rejection sampling scheme.  Chapter 2 in
 
 [2] Grimmett, Stirzaker.  **Probability and Random Processes: Third Edition**.  Oxford University Press, 2001.
 
-[3] Rubinstein and Kroese.  **Simulation and the Monte Carlo Method: Third Edition**.  Wiley, 2017.
+[3] Rubinstein, Kroese.  **Simulation and the Monte Carlo Method: Third Edition**.  Wiley, 2017.
 
 [4]  Shonkwiler, Mendivil.  **Explorations in Monte Carlo Methods**.  Springer, 2009.
 
@@ -647,3 +706,6 @@ There are a number of ways to improve a rejection sampling scheme.  Chapter 2 in
 
 [6] Pilon.  **Probabilistic Programming and Bayesian Methods for Hackers**.  Find this at [https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers](https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers).
 
+[7] Denny, Gaines.  **Chance in Biology: Using Probability to Explore Nature**.  Princeton University Press, 2000.
+
+[8] Grimmett, Welsh.  **Probability, An Introduction: Second Edition**.  Oxford University Press, 2014.
