@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE,
                       message = FALSE)
 ```
 
-## Introduction
+# Introduction
 These notes are written for the Math 331 Data Analysis With R course, and are a quick overview of three areas at the boundary between mathematics and computer science.  The goals of these notes are:
 
 * Introduce probability terminology and theory
@@ -25,9 +25,9 @@ These notes are written for the Math 331 Data Analysis With R course, and are a 
 * Provide some practical examples for using R for simulations and sampling
 
 \newpage
-## Probability
+# Probability
 
-### Terminology and Notation
+## Terminology and Notation
 
 An *event space* or *sample space* $S$ is a nonempty set.  An *event* is a subset of the given sample space.  Visually, we can represent events in sample spaces as .
 
@@ -49,7 +49,7 @@ The event "$A$ or $B$" is the set $A\cup B$ and we write $P(A\text{\ or\ }B)=P(A
 
 The event "not $A$" is called the *complement of* $A$, and is written $A^C$.  If we need to specify the sample space, we may use the set difference notation $S\setminus A$ instead of $A^C$.
 
-### Properties of Probability
+## Properties of Probability
 Chapters 2 and 3 of [1] contain a standard presentation of the properties of probability.  Chapter 1 of [2] contains a more advanced look at this material.  Here, we recount only the axioms and the basic propositions at a basic level.
 
 Suppose that $S$ is a given sample space.  Then a probability measure on $S$ is a function $P$ mapping events to real numbers, with $P$ satisfying the following three axioms:
@@ -88,7 +88,7 @@ possible hands, and so each hand would be assigned a probability of 1/2598960.
 
 More generally, whenever we have a sample space that can be expressed as a union of $N$ atomic events, assigning $P(A)=1/N$ for all atomic events $A$ and then requiring the probability axioms to hold gives a probability measure.
 
-### Conditional Probability
+## Conditional Probability
 The notion of conditional probability is probably the most important concept in probability theory.  In essence, we compute probabilities of events given different collections of information.
 
 If $A$ and $B$ are events, then the *probability of $A$ given that $B$ occurred* is denoted $P(A|B)$.  When we know that $B$ occurred, this reduces our sample space to $B$.  A few sketches with Venn diagrams should convince you that $$P(A|B)=\frac{P(A\cap B)}{P(B)}$$This expression can be rearranged to read, equivalently, $P(A\cap B)=P(A|B)P(B)$.  Section 3.5 of [1] shows that the function $P(\cdot |B)$ mapping events to real numbers is also a probability measure, in that it satisfies the three axioms above. 
@@ -103,7 +103,7 @@ Two events $A$ and $B$ are said to be *independent* if $P(A|B)=P(A)$.  That is, 
 
 **Proposition 9**: $A$ and $B$ are independent events if and only if $P(A\cap B)=P(A)P(B)$.
 
-### Random Variables
+## Random Variables
 A *random variable* is a function mapping events in a sample space to real numbers.  We often think of random variables as measurements of quantities of interest in an experiment.  For example, if our experiment is to flip a fair coin 20 times, then one random variable might be $X$=number of Heads in the 20 flips.  Here, the range of $X$ is $\{0,\ldots,20\}$.
 
 In this example, we denote the event "we saw 1 Heads in the 20 flips" as $X=1$.  The notation $X=1$ should be interpreted to mean "all of the events in the sample space $S$ which, when measured by $X$, produce an output of 1".  (For those of you with some advanced mathematics under your belt, $X=1$ is one way to write the inverse image of the output 1 under the function $X$, i.e. the set $X^{-1}(1)$.)  *It is very important to understand that when we write $X=1$ or $X\leq 10$, these are just notations describing certain events, and we should treat them just as we would any other event!*
@@ -118,7 +118,7 @@ Given a continuous random variable $X$, the *probability density function* for $
 
 In both the discrete and continuous cases, the distribution is a sort of sum of the density or mass, and the density or mass function is a change in the distribution.
 
-### Expectation and Variance
+## Expectation and Variance
 The *expected value of a discrete random variable* $X$, $E(X)$, is given by the formula$$E(X)=\sum_xxp(x)$$where $p$ is the probability mass function of $X$ and this summ is computed over all $x$ values in the range of $X$.  For example, if the random variable has mass given by the table
 \begin{center}
 \begin{tabular}{c|c}$X=$ & $p(x)$\\ \hline 0 & 0.1\\ 1 & 0.6\\ 2 & 0.3\\ \hline
@@ -142,7 +142,7 @@ If we are dealing with a single random variable $X$, we (by tradition) denote $E
 
 Another measurement we can make about a random variable is the average deviation of the values of the random variable from the center, $E(|X-\mu|)$.  It turns out that in practice, a more mathematically tractable quantity is the average square deviation of the values of $X$ from its center, called the *variance of* $X$, denoted $V(X)$, and defined by$$\sigma^2=V(X)=E((X-\mu)^2)=\sum_x(x-\mu)^2p(x)$$(where $\sigma$ is the greek letter *sigma* and is used by long tradition).  The square root of this quantity has the same physical units as $X$, and so it is often convenient to compute $\sigma=\sqrt{V(X)}$, which is called the *standard deviation of* $X$.
 
-### Exercises
+## Exercises
 **Exercise ** Suppose that we flip a fair coin 5 times and record the face showing after each flip. (a) How large is the sample space for this experiment?  (b) Write examples of two elements of the sample space.  (c) How many of the elements of the sample space begin with a Heads?  (d) How many of the elements of this sample space begin with a Tails?  (e) How many of the elements of the sample space begin with a Heads and end with a Tails?  (f) Are the events "Begins with a Heads" and "Begins with a Tails" mutually exclusive?  (g) Are the events "Begins with a Heads" and "Ends with a Tails" mutually exclusive?
 
 **Exercise ** For a certain species of cat, the number of young produced each year per mother is a random variable $X$.  Current data suggests that $X$ has the mass function
@@ -180,10 +180,10 @@ Suppose we have a coin, and we have the hypothesis $A$=the coin is fair.  To tes
 Part (c) leads us into a very deep rabbit hole called Bayesian methods in statistics.  They are generally quite flexible and produce easily interpretable results\dots but most of the time we can not compute in the Bayesian framework by hand.  Bayesian methods really only became common in the late 1990's, but since then have seen an explosion in adoption; they are considered essential tools by many ecologists, biologists, and market analysts.
 
 \newpage
-## Simulation
+# Simulation
 When we *simulate* an experiment, we program the rules of an experiment and some initial conditions into a computer, and then we perform the experiment.  Generally, simulated experiments are cheap and highly repeatable.  However, they do require us to understand the rules for the experiment very well.  So for many questions in probability, simulation can be a highly effective tool because in asking the probability question, we define the rules of the experiment!  Some questions in the natural, physical, and social sciences can be approached by simulation experiments, but care must be taken in interpreting the results.
 
-### Random Number Generators in R
+## Random Number Generators in R
 Probability simulations generally require a random number generator.  Chapter 2 of [3] contains a wealth of information, both historical and technical, on random number generation in digital computers.  This is a beautiful and absolutely essential topic at the boundary of mathematics and computer science.
 
 We'll approach random number generation on a need-to-know basis.  For now, we need to know how R can generate random numbers.
@@ -250,7 +250,7 @@ sample(choices, 20, replace = TRUE)
 ```
 
 
-### A Programming Aside: The Differences Among For Loops, While Loops, and Apply
+## A Programming Aside: The Differences Among For Loops, While Loops, and Apply
 In simulation, we will often need to repat an experiment or some action in an experiment many times.  There are several common programming structures to accomplish this.  In this section I'll take a moment to step to the side and consider these.
 
 When deciding which programming structure to use to repeat an action ("loop"), we need to ask three questions:
@@ -266,10 +266,10 @@ If the answer to 1 is *yes* and the answer to 2 is *yes*, we will almost surely 
 
 If the answer to 1 is *yes* and the answer to 2 is *no*, we will be able to use an apply loop.  This will happen very frequently for us; we'll see why in the examples in the next section!
 
-### Modularity and Simulation
+## Modularity and Simulation
 In computer programming, *modularity* is the programming practice in which programs are broken down into small chunks by using functions and comments, in such a way that the chunks can be individually assessed for performance and the code can be more easily understood.
 
-### Example: Dice Throw Probability
+## Example: Dice Throw Probability
 Let's first simulate a probability we can compute symbolically, as a check: what is the probability of rolling a sum of 7 when rolling a pair of fair six-sided dice?
 
 Generally, we can fit probability simulations into a common framework:
@@ -322,7 +322,7 @@ Symbolically, we have six 7's out of 36 outcomes, i.e.
 ```
 So our estimate is certainly good enough for government work.  If we need to how can we improve our estimate?
 
-### Example: A Walk With a Coin
+## Example: A Walk With a Coin
 My son is standing on a long, straight sidewalk running east and west.  I give him a fair coin and the following procedure:
 
 Step 1: Take 1 step east.
@@ -360,7 +360,7 @@ hist(data,breaks=60,col='blue')
 ```
 How do we interpret this histogram?
 
-### Example: Professor Z's Office Hours
+## Example: Professor Z's Office Hours
 Professor Z tries to show up at his office for appointments on time.  He really does!  But students and faculty frequently stop him to ask questions or just chat, and he is a typical absent-minded professor, so sometimes he is late.
 
 Estrella is trying to meet Professor Z at his office for an appointment.  She really is!  But between traffic and campus parking, Estrella might be late.
@@ -371,7 +371,7 @@ Professor Z and Estrella are both busy, so they can't wait long for the other pe
 
 (b) Now let's assume that Professor Z and Estrella each arrive at the appointment at a time uniformly distributed between noon and 1PM.  Let's also assume that each will wait for a uniformly distributed random amount of time between 0 and 20 minutes.  What do you expect to happen to the probability the two meet in this scenario, as compared to that in part (a)?  Write a simulation to estimate the probability that Professor Z and Estrella actually meet for their appointment.
 
-#### Part (a)
+### Part (a)
 Define our constants.
 ```{r}
 set.seed(42)
@@ -396,7 +396,7 @@ Finally we can analyze the data and compute the probability of interest.
 ```{r}
 length(which(data))/number_of_experiments
 ```
-#### Part (b)
+### Part (b)
 Define our constants.
 ```{r}
 number_of_experiments <- 100000
@@ -443,7 +443,7 @@ inputs[index]
 ```
 Can you convince yourself that this is (approximately) the right answer?
 
-### Example: Area Under a Curve
+## Example: Area Under a Curve
 Let's suppose that we want to compute the area under the curve $f(x)=x(1-x)$ on the interval $[0,1]$.  Graphically, we are trying to compute the area shown below:
 ```{r}
 X <- seq(from=0,to=1,by=0.01)
@@ -493,21 +493,96 @@ integrate(f,lower=0,upper=1)
 ```
 So our darts estimate is quite good.  Computationally, it does not beat the standard numerical integration techniques as long as we have, but it may be helpful in other ways.
 
-### Exercises
+## Exercises
+**Exercise ** Bad Driving!  A group of five roommates collectively have 10 car accidents in one year.  One of the roommates - Kevin, it's always Kevin! - is responsible for 6 of the 10 accidents.  His roommates tell him to start taking the bus, but Kevin claims it is just bad luck, and that he is no worse a driver than any of the others.
+
+(a) Let's test Kevin's claim.  Assume that each of the 10 accidents was equally likely to be caused by any one of the five roommates.  Write a simulation to estimate the probability that Kevin causes at least 6 of the 10 car accidents in a year.  If this probability is very small, then we have to say that EITHER we just observed a very unlikely event, OR our assumption that each of the 10 accidents was equally likely to be caused by any roommate is false.  It's silly to assume we observe an unlikely event\ldots so we would conclude that our assumption was false.
+
+(b) How would your answer change if Kevin caused 3 of the 10 accidents?
+
+(c) How would your answer change if Kevin caused 8 of the 10 accidents?
+
+**Exercise ** More driving!  You pull up to a red stoplight behind some other cars.  How long will it take before you start moving again?  Assume that the number of cars ahead of you at the red light is Poisson distributed with mean 3, the wait time for each car including yours to begin moving after the car ahead has begun moving is uniformly distributed between 2 and 10 seconds, and the time for the red light to change to green is uniformly distributed between 0 and 60 seconds.  Give your expected wait time and the variance of your wait time.
+
+**Exercise **  Let's imagine a building with 10 floors (including ground level) and one elevator, and not very many people going in or out.  In this building the elevator is fairly primitive and obeys the following rules:
+
+* Once the elevator is called from a certain floor, the elevator heads towards that floor and does not stop at any floors in between.
+
+* The elevator parks on whatever floor it last visits and waits for the next call.  That is, the elevator does not by default move to the ground floor, the tenth floor, or a middle floor to park and wait; it just waits in place.
+
+* The elevator takes about 10 seconds to get from one floor to the next floor above or below.  So for example, the elevator takes 30 seconds to travel from floor 1 (the ground floor here in the US) to floor 4, because it has three 10 second transitions to make: 1 to 2, 2 to 3, and 3 to 4.
+
+We can also make the following assumptions about the people in the building and how they use the elevator:
+
+* People use the elevator so infrequently that we can assume that no one calls the elevator while anyone else is using it.  That is, we assume that you can push the call button, wait for the elevator, and then compete your ride, all without anyone else calling the elevator.
+
+* People tend to move from any given floor in the building to any other given floor with equal likelihood.  So the elevator is equally likely to be parked on any floor.
+
+George, located on floor 2, wants to visit his friend Marvin, located on floor 9.
+
+(a) What is the probability that George's total travel time, from pushing the call button to arriving on floor 9, exceeds 100 seconds?
+
+(b) For the trip from floor 2 to 9, what is the expected travel time and the variance in the travel time?
+
+(c) What if there is a second elevator, and whenever a call button is pushed, the closest elevator always responds?  How does this change your answer to part (b)?
+
+(d) You can extend this elevator problem in many ways to improve the realism.  For example, the elevator is realistically less likely to be parked on floor 2 or 3 if there are accessible stairs.  Write a probability distribution for the parked location of the elevator, and then recompute your answer to (b) with this new distribution.
+
+This problem is based on Donald Knuth's article about the elevator frustrations experienced by George Gamow (physicist) and Marvin Stern (mathematician) when travelling to each other's offices.  See [9] for details about the theoretical analysis.
+
+**Exercise ** It's registration time for classes!  There are two sections of elementary physics, each with 40 seats available.
+
+(a) If students register randomly for section 01 and section 02, how many seats will be left in one section when the other section fills up?  Give the expected value and variance for the number of seats remaining in the open section.
+
+(b) Now let's suppose there are two types of students.  Type A register in the section with the most students already registered, assuming that the other students know something about that section.  Type B register in the section with the fewest students already registered, wanting more room to stretch out.  About 60% of students are Type A and 40% are type B.  Students register for elementary physics one at a time, in a random order.  How many seats will be left in one section when the other fills up in this scenario?  Give the expected value and variance for the number of seats.
+
+This problem is based on an infamous paper [10] by Donald Knuth about toilet paper dispensers.
+
+**Exercise ** Mark-Recapture Population Estimation.  We would like to estimate the population size of a certain species of animals in a certain region.  Let's call the unknown population size $N$.  We perform the following procedure to gather data and perform an estimate:
+
+1. Capture $S_1$ of the species and mark them in some way.
+
+2. Release the captured animals and wait a sufficient time so they can "mix back in" to the general population.
+
+3. Capture $S_2$ of the species and count the number in this sample that have already been marked, $M$.
+
+4. With certain assumptions in place, we reason that the proportion of marked individuals in the sample is the same as the proportion of marked individuals in the population:$$\frac{M}{S_2}=\frac{S_1}{N}$$Solving for $N$ gives$$\hat{N}=\frac{S_1S_2}{M}$$(We write $\hat{N}$ to denote that this is an estimate and not the true value.)
+
+(a) Suppose that the population size is actually $N_{actual}=1000$.  Suppose that our sample sizes are $S_1=S_2=50$, and assume that all animals are equally likely to be captured during each sampling.  Use a simulation to find the expected value and variance for $\hat{N}$.  Is the expected value what you would expect it (or want it) to be?
+
+(b) Now, still using $S_1=S_2=50$, assume that all animals are equally likely to be captured in the first round, but suppose that the animals which were captured in the first round are wary of humans and are only half as likely as the uncaptured animals to be captured in the second round.  Use a simulation to find the expected value and variance for $\hat{N}$.  (You'll need to work out the probabilities for recapture for marked and unmarked animals.)
+
+For information about mark-recapture methods, visit the [Wikipedia page](https://en.wikipedia.org/wiki/Mark_and_recapture).  
+
+**Exercise ** Parrondo's Paradox.  Let's suppose that you begin with an amount of money $M$.  Here are two games you can play:
+
+Game A: Flip a coin that is biased to come up Heads 45% of the time and Tails 55% of the time.  If you flip Heads you win \$1 and if you flip Tails you lose \$1.
+
+Game B: You have two biased coins.  If $M$ is a multiple of 3, then you flip coin 1, which is biased to come up Heads 5% of the time and Tails 95% of the time (as in Game A, Heads means you win \$1 and Tails means you lose \$1).  If $M$ is not a multiple of 3, then you flip coin 2, which is biased to come up Heads 70% of the time and Tails 30% of the time (ditto on payouts).
+
+(a) Explain why repeatedly playing Game A is a losing game, i.e. you expect your amount of money $M$ to decline to 0.
+
+(b) Is repeatedly playing Game B a losing game?  Perform a simulation to find out!
+
+(c) Now suppose that you repeatedly play Game A or Game B and you randomly flip back and forth between them each round.  Is this a losing game?  Perform a simulation to find out!
+
+This problem is known as [Parrondo's Paradox](https://en.wikipedia.org/wiki/Parrondo%27s_paradox), first formulated in 1996 by Juan Parrondo.  If we expect to lose each game in repeated play, how can we expect to win when randomly switching between these losing games?
+
+
 
 \newpage
-## Sampling
+# Sampling
 In this section we will dig a little more deeply into how random number generators for various distributions can be programmed.  This section is a little sparser, but contains links to lots of useful web content.
 
-### Distributions in R
+## Distributions in R
 Here is some information about the "built-in" distributions in R: https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Distributions.html .  In an introductory statistics class, you will probably have encountered the binomial, Poisson, normal, and chi-squared distributions.
 
-### The Monte Carlo Method
+## The Monte Carlo Method
 The Monte Carlo method is really not a method, but an entire class of computational algorithms that focus on answering questions through simulation.  Read more here: https://en.wikipedia.org/wiki/Monte_Carlo_method .  (As a point of interest, I was supported by Stan Ulaw's seminar and scholarship as a graduate student.)  References [3] and [4] contain some excellent material discussing Monte Carlo methods.  Reference [4] contains code and excellent exercises written in Matlab; Python users using the numpy and pylab packages will find this highly approachable.  [5] is a more advanced mathematical text, aimed at clarifying the connections between Monte Carlo methods and the Bayesian approach to statistical analysis.  [6] moves in the computational direction instead, clarifying the connections between Monte Carlo methods and the Bayesian approach using Python and the pymc3 package.
 
 In the simulation section of these notes we have seen examples of estimating probabilities through simulation and optimizing functions through simulation.  However, we have not really seen simulations used to generate samples from distributions of continuous random variables.  How do computer programs work "under the hood"?  How does R generate 10000 draws from a beta distribution?  We'll tackle this in the next two sections.
 
-### Inversion Sampling
+## Inversion Sampling
 Suppose that $X$ is a continuous random variable with distribution function $F(x)=P(X\leq x)$.  Then $F$ is an increasing function of $x$, and will have an "s shape",similar to the following.
 ```{r}
 X <- seq(from=-3,to=3,by=0.01)
@@ -640,7 +715,7 @@ hist(draws,breaks=60)
 ```
 The benefit of this approach over sampling from the original data set is that the approximating density function has smoothed out the data.  We now get some data points in the gaps in between the values in the original data set.  This fits our mental model of flow rates of the Nile; there's no reason that the river may have a flow rate of 702 one year and 714 another year, but never 710.  If we sample from the original data set we'll never draw a sample value of 710, but with the smoothed density, we might.
 
-### Rejection Sampling
+## Rejection Sampling
 Since we already have a sampling method, why introduce another?  Well, inversion sampling works quite efficiently for a single random variable but not for multivariable scenarios.
 
 Instead, we'll use a technique called *rejection sampling* (or sometimes "acceptance-rejection sampling").  This technique is quite similar to the darts-throwing technique we used to estimate integrals earlier.  The idea is that we will throw a "dart" into a region with a density function.  If the dart falls under the graph of the density function, we will accept the appropriate coordinates of the dart as a sample point, and if the dart fals above the graph of the density function we will reject the dart for our sample and move on to another.
@@ -689,10 +764,10 @@ Note the heavier clustering near $(0,0)$.  The density function is maximal there
 
 There are a number of ways to improve a rejection sampling scheme.  Chapter 2 in [3] has more details on rejection sampling, and chapter 2 in [4] has several examples of designing sampling algorithms using inversion schemes and in some cases and rejection sampling in others.
 
-### Exercises
+## Exercises
 
 \newpage
-## References
+# References
 
 [1] Ross.  **A First Course in Probability: Fifth Edition**.  Prentice-Hall, 1998.
 
@@ -709,3 +784,7 @@ There are a number of ways to improve a rejection sampling scheme.  Chapter 2 in
 [7] Denny, Gaines.  **Chance in Biology: Using Probability to Explore Nature**.  Princeton University Press, 2000.
 
 [8] Grimmett, Welsh.  **Probability, An Introduction: Second Edition**.  Oxford University Press, 2014.
+
+[9] Knuth. *The Gamow–Stern elevator problem.* J. Recr. Math 2 (1969): 131-137.
+
+[10] Knuth. *The toilet paper problem.* The American Mathematical Monthly 91.8 (1984): 465-470.
