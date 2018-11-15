@@ -1,6 +1,6 @@
 ---
-title: "Probability, Simulation, and Sampling"
-author: "Christopher Brown"
+title: "Probability, Simulation, Sampling"
+author: "Dr. Christopher Brown"
 date: "November 9, 2018"
 output: pdf_document
 fontsize: 11pt
@@ -16,13 +16,13 @@ knitr::opts_chunk$set(echo = TRUE,
 # Introduction
 These notes are written for the Math 331 Data Analysis With R course, and are a quick overview of three areas at the boundary between mathematics and computer science.  The goals of these notes are:
 
-* Introduce probability terminology and theory
+* Introduce probability terminology and theory.
 
-* Introduce the notion of a simulation approach to problem solving and provide examples
+* Introduce the notion of a simulation approach to problem solving and provide examples.
 
 * Give an "under-the-hood" glance at some techniques for algorithmically generating random samples.
 
-* Provide some practical examples for using R for simulations and sampling
+* Provide some practical examples for using R for simulations and sampling.
 
 \newpage
 # Probability
@@ -31,9 +31,9 @@ These notes are written for the Math 331 Data Analysis With R course, and are a 
 
 An *event space* or *sample space* $S$ is a nonempty set.  An *event* is a subset of the given sample space.  Visually, we can represent events in sample spaces as .
 
-Probability is a complicated term.  In these notes we give two rough definitions of probability, each of which is useful in some scenarios.  For a more precise mathematical definition of probability see [1] and [2].
+Probability is a complicated term.  In these notes we give two rough definitions of probability, each of which is useful in some scenarios.  For more precise mathematical definitions of probability see [1] and [2].
 
-Frequentist definition: Roughly, we determine the *probability of an event* $A$ by repeatedly performing an experiment in which the event $A$ may or may not occur, and the probability is then the ratio of the number of times $A$ occurs to the number of times the experiment is performed.  That is, the probability of $A$ is the relative frequency at which $A$ occurs in an experiment repeated many times.  For example, if we flip a fair coin 1000 times, we expect that the relative frequency with which we see heads will be about 1/2.
+Frequentist definition: Roughly, we determine the *probability of an event* $A$ by repeatedly performing an experiment in which the event $A$ may or may not occur, and the probability is then the ratio of the number of times $A$ occurs to the number of times the experiment is performed.  That is, the probability of $A$ is the relative frequency at which $A$ occurs in an experiment repeated many times.  For example, if we flip a fair coin 1000 times, we expect about 500 Heads in the flips, so that the relative frequency with which we see Heads will be about 1/2.
 
 Bayesian definition: Roughly, we determine the *probability of an event* $A$ by evaluating the credibility we have in the occurrence of $A$ given our observations of the system.  For example, if we have not flipped a coin, we might give equal credibility to Heads and Tails for the next flip.  We base this on the fact that most coins in our experience seem to be fiar.  On the other hand, if we have already flipped that coin 10 times and seen 10 heads, we might give more credibility to Heads than Tails for the next flip, because we suspect the coin may be biased.
 
@@ -48,6 +48,8 @@ Two events are *mutually exclusive* when $A\cap B=\emptyset$.
 The event "$A$ or $B$" is the set $A\cup B$ and we write $P(A\text{\ or\ }B)=P(A\cup B)$.
 
 The event "not $A$" is called the *complement of* $A$, and is written $A^C$.  If we need to specify the sample space, we may use the set difference notation $S\setminus A$ instead of $A^C$.
+
+**********
 
 ## Properties of Probability
 Chapters 2 and 3 of [1] contain a standard presentation of the properties of probability.  Chapter 1 of [2] contains a more advanced look at this material.  Here, we recount only the axioms and the basic propositions at a basic level.
@@ -76,9 +78,9 @@ For question (1): Yes, we can.  This requires some proof, but the essential obse
 
 For question (2): Yes.  For the event $B$="flip heads on at least one flip", we can compute $P(B)$ in two ways:
 
-$B=\{HH,HT,TH\}$ and so $P(B)=P(HH)+P(HT)+P(TH)$ from axiom 3, and so $P(B)=1/4+1/4+1/4=3/4$ from our assignment of probabilities to atomic events.
+Way 1: $B=\{HH,HT,TH\}$ and so $P(B)=P(HH)+P(HT)+P(TH)$ from axiom 3, and so $P(B)=1/4+1/4+1/4=3/4$ from our assignment of probabilities to atomic events.
 
-Alternately, we have $B^C=\{TT\}$, so $P(B)=1-P(B^C)=1-1/4=3/4$.
+Way 2: Alternately, we have $B^C=\{TT\}$, so $P(B)=1-P(B^C)=1-1/4=3/4$.
 
 This is a fairly simple example, but the principle holds for much larger sample spaces.  For example, if we are studying five card draw poker probabilities, we would want to consider the sample space with each poker hand as an atomic event.  There are
 ```{r}
@@ -88,8 +90,10 @@ possible hands, and so each hand would be assigned a probability of 1/2598960.
 
 More generally, whenever we have a sample space that can be expressed as a union of $N$ atomic events, assigning $P(A)=1/N$ for all atomic events $A$ and then requiring the probability axioms to hold gives a probability measure.
 
+**************
+
 ## Conditional Probability
-The notion of conditional probability is probably the most important concept in probability theory.  In essence, we compute probabilities of events given different collections of information.
+The notion of conditional probability is probably the most important concept in probability theory.  In essence, with this concept we can express and compute probabilities of events given different collections of information.
 
 If $A$ and $B$ are events, then the *probability of $A$ given that $B$ occurred* is denoted $P(A|B)$.  When we know that $B$ occurred, this reduces our sample space to $B$.  A few sketches with Venn diagrams should convince you that $$P(A|B)=\frac{P(A\cap B)}{P(B)}$$This expression can be rearranged to read, equivalently, $P(A\cap B)=P(A|B)P(B)$.  Section 3.5 of [1] shows that the function $P(\cdot |B)$ mapping events to real numbers is also a probability measure, in that it satisfies the three axioms above. 
 
@@ -102,6 +106,8 @@ Because $P(A\cap B) = P(B\cap A)$, we can now write
 Two events $A$ and $B$ are said to be *independent* if $P(A|B)=P(A)$.  That is, $A$ and $B$ are independent if the computation of the probability of $A$ does not change whether we know $B$ happened or not.
 
 **Proposition 9**: $A$ and $B$ are independent events if and only if $P(A\cap B)=P(A)P(B)$.
+
+**************
 
 ## Random Variables
 A *random variable* is a function mapping events in a sample space to real numbers.  We often think of random variables as measurements of quantities of interest in an experiment.  For example, if our experiment is to flip a fair coin 20 times, then one random variable might be $X$=number of Heads in the 20 flips.  Here, the range of $X$ is $\{0,\ldots,20\}$.
@@ -117,6 +123,8 @@ Given a discrete random variable $X$, the *probability mass function* for $X$ is
 Given a continuous random variable $X$, the *probability density function* for $X$ is the function $f(x)$ such that$$P(X\leq x)=\int_{-\infty}^xf(z)\, dz$$and the *continuous distribution function* for $X$ is the function$$F(x)=P(X\leq x)=\int_{-\infty}^xf(z)\, dz$$In the language of calculus, $F'(x)=f(x)$, so the rate of change of the distribution is the density.  Thus we can create the density from the distribution and the distribution from the density.
 
 In both the discrete and continuous cases, the distribution is a sort of sum of the density or mass, and the density or mass function is a change in the distribution.
+
+*************
 
 ## Expectation and Variance
 The *expected value of a discrete random variable* $X$, $E(X)$, is given by the formula$$E(X)=\sum_xxp(x)$$where $p$ is the probability mass function of $X$ and this summ is computed over all $x$ values in the range of $X$.  For example, if the random variable has mass given by the table
@@ -141,6 +149,8 @@ We can also compute the expected value of quantities computed from the random va
 If we are dealing with a single random variable $X$, we (by tradition) denote $E(X)$ by the Greek letter *mu*, $\mu$.
 
 Another measurement we can make about a random variable is the average deviation of the values of the random variable from the center, $E(|X-\mu|)$.  It turns out that in practice, a more mathematically tractable quantity is the average square deviation of the values of $X$ from its center, called the *variance of* $X$, denoted $V(X)$, and defined by$$\sigma^2=V(X)=E((X-\mu)^2)=\sum_x(x-\mu)^2p(x)$$(where $\sigma$ is the greek letter *sigma* and is used by long tradition).  The square root of this quantity has the same physical units as $X$, and so it is often convenient to compute $\sigma=\sqrt{V(X)}$, which is called the *standard deviation of* $X$.
+
+************
 
 ## Exercises
 **Exercise ** Suppose that we flip a fair coin 5 times and record the face showing after each flip. (a) How large is the sample space for this experiment?  (b) Write examples of two elements of the sample space.  (c) How many of the elements of the sample space begin with a Heads?  (d) How many of the elements of this sample space begin with a Tails?  (e) How many of the elements of the sample space begin with a Heads and end with a Tails?  (f) Are the events "Begins with a Heads" and "Begins with a Tails" mutually exclusive?  (g) Are the events "Begins with a Heads" and "Ends with a Tails" mutually exclusive?
@@ -167,6 +177,14 @@ How do the mean and variance of $Y$ compare to $X$?  What about the mass functio
 0 & 0.3\\ 1 & 0.5\\ 2 & 0.15\\ 3 & 0.05\\ \hline
 \end{tabular}
 \end{center}
+(a) Are $X=0$ and $X=1$ mutually exclusive events?  (b) Using the third axiom of probability, compute $P(X<3)$.  (c)  Using the complementation rule compute $P(X<3)$.  (c) Is $P(X<2)$ greater than, less than, or equal to $P(X<3)$?  Try to explain this without resorting to computing these probabilities.
+
+**Exercise ** Suppose that $X$ is a random variable with mass function
+\begin{center}
+\begin{tabular}{c|c}$X=$ & $p(x)$\\ \hline
+0 & 0.3\\ 1 & 0.5\\ 2 & 0.15\\ 3 & 0.05\\ \hline
+\end{tabular}
+\end{center}
 (a) Compute the probability $P(X\geq 2|X\neq 0)$.  (b) Compute the probability $P(X=0|X<3)$.  (c) Compute the probability $P(X=0|X=3)$.  (d) Are $X=0$ and $X=3$ mutually exclusive events?  Explain.  (e) Are $X=0$ and $X=3$ independent events?  Explain.  (f) So, does "mutually exclusive" mean the same thing as "independent"?
 
 **Exercise ** Show that if $A$ and $B$ are mutually exclusive events then $P(A\cup B)=P(A)+P(B)$.
@@ -179,9 +197,63 @@ Suppose we have a coin, and we have the hypothesis $A$=the coin is fair.  To tes
 
 Part (c) leads us into a very deep rabbit hole called Bayesian methods in statistics.  They are generally quite flexible and produce easily interpretable results\dots but most of the time we can not compute in the Bayesian framework by hand.  Bayesian methods really only became common in the late 1990's, but since then have seen an explosion in adoption; they are considered essential tools by many ecologists, biologists, and market analysts.
 
+**Exercise ** Suppose that a plane has crashed in one of three regions and we are in charge of running the search.  The plane is equally likely to have crashed in any one of the three regions.  Region A is mountainous and the probability of finding the plane in a search of A given that it is in A is only 0.2.  Regions B and C are grassy hills, and so the probability of finding the plane on a search of B or C given that it crashed in that region is 0.6.
+
+(a) Suppose we first search region B and do not find the plane.  Use Bayes' Theorem to update the probabilities that the plane crashed in regions A, B, or C.
+
+(b)  Now suppose we search region C and do not find the plane.  Again, Use Bayes' Theorem to update the probabilities that the plane crashed in regions A, B, or C.
+
+(c) Which region should we search next?  Why?
+
+**Exercise ** Suppose that $X$ is a random variable with mass function
+\begin{center}
+\begin{tabular}{c|c}$X=$ & $p(x)$\\ \hline
+0 & 0.3\\ 1 & 0.5\\ 2 & 0.15\\ 3 & 0.05\\ \hline
+\end{tabular}
+\end{center}
+
+(a) Find the distribution function for $X$.  
+
+(b) Compute $P(X\leq 2)$ using the distribution function.
+
+**Exercise ** Suppose that $X$ is a random variable with distribution function
+\begin{center}
+\begin{tabular}{c|c}$X=$ & $F(x)$\\ \hline
+0 & 0.1\\ 1 & 0.4\\ 2 & 0.9\\ 3 & 1\\ \hline
+\end{tabular}
+\end{center}
+
+Find the probability mass function for $X$.
+
+**Exercise ** Suppose that $X$ is a continuous random variable with density function$$f(x)=\left\{\begin{array}{cc} 2e^{-2x} & x\geq 0\\ 0 & \text{otherwise}\end{array}\right. $$This is the exponential distribution.
+
+(a) Compute the distribution function for $X$.
+
+(b) Use the distribution function to compute $P(2\leq X\leq 5)$.
+
+(c) Compute the mean of $X$.
+
+**Exercise ** For each of the following named distributions, (i) look up the distribution on Wikipedia and write a few sentences on what it is used for, then find the distribution in R and (ii) graph the density for a few example parameter sets, (iii) generate a sample from the random variable of size 1000, and (iv) plot the histogram of your sample.
+
+(a) Binomial 
+
+(b) Poisson 
+
+(c) Negative binomial
+
+(d) Normal
+
+(e) Student t
+
+(f) Exponential
+
+(g) Beta
+
 \newpage
 # Simulation
-When we *simulate* an experiment, we program the rules of an experiment and some initial conditions into a computer, and then we perform the experiment.  Generally, simulated experiments are cheap and highly repeatable.  However, they do require us to understand the rules for the experiment very well.  So for many questions in probability, simulation can be a highly effective tool because in asking the probability question, we define the rules of the experiment!  Some questions in the natural, physical, and social sciences can be approached by simulation experiments, but care must be taken in interpreting the results.
+When we *simulate* an experiment, we program the rules of an experiment and some initial conditions into a computer, and then we perform the experiment electronically.  Generally, simulated experiments are cheap and highly repeatable.  However, they do require us to understand the rules for the experiment very well.  So for many questions in probability, simulation can be a highly effective tool because in asking the probability question, we define the rules of the experiment!  Some questions in the natural, physical, and social sciences can be approached by simulation experiments, but care must be taken in interpreting the results.
+
+***********
 
 ## Random Number Generators in R
 Probability simulations generally require a random number generator.  Chapter 2 of [3] contains a wealth of information, both historical and technical, on random number generation in digital computers.  This is a beautiful and absolutely essential topic at the boundary of mathematics and computer science.
@@ -202,7 +274,7 @@ data <- runif(100000)
 ```
 On my machine, generating these hundred thousand values required about half a second.
 
-Random number generators work something like a roulette wheel; if we knew how fast the wheel was spun, how fast the ball was rolled, and all the little irregularities about how this particular roulette wheel spins, then we could use physics to correctly predict the outcome of the roulette spin.  That is, roulette wheels are not really random, they are deterministic and have sensitive dependence on initial conditions; since it is nearly impossible to know the initial conditions precisely enough, the roulette wheel "feels" random.  For our digital random number generators, we can set the initial conditions.  This means that experiments can be made precisely repeatable.  For example, if I execute
+Digital random number generators are not really random, but work something like a roulette wheel; if we knew how fast the wheel was spun, how fast the ball was rolled, and all the little irregularities about how this particular roulette wheel spins, then we could use physics to correctly predict the outcome of the roulette spin.  That is, roulette wheels are not really random, they are deterministic and have sensitive dependence on initial conditions; since it is nearly impossible to know the initial conditions precisely enough, the roulette wheel "feels" random.  Digital random number generators are similar, but with one important difference.  For our digital random number generators, we can set the initial conditions.  This means that experiments can be made precisely repeatable.  For example, if I execute
 ```{r}
 runif(5)
 ```
@@ -237,7 +309,7 @@ and with replacement we have
 set.seed(1234)
 sample(data,3,replace = TRUE)
 ```
-When we replace before drawing again, we can resample from the same small data set many times.  For example, if I give a multiple choice exam with twenty questions, each of which has a correct answer in choice a, b, c, or d, I might want to generate the answers randomly to avoid human bias.  So I can turn to R and sample:
+When we replace before drawing again, we can resample from the same small data set many times.  For example, if I give a multiple choice exam with twenty questions, each of which has a correct answer of choice a, b, c, or d, I might want to generate the answers randomly to avoid human bias.  So I can turn to R and sample:
 ```{r}
 choices <- c('a','b','c','d')
 sample(choices, 20, replace = TRUE)
@@ -248,10 +320,12 @@ If for some reason I want to bias the selection towards choice a, I can increase
 choices <- c('a','a','a','b','c','d')
 sample(choices, 20, replace = TRUE)
 ```
+Does it look like there are more a's than there ought to be?
 
+********
 
 ## A Programming Aside: The Differences Among For Loops, While Loops, and Apply
-In simulation, we will often need to repat an experiment or some action in an experiment many times.  There are several common programming structures to accomplish this.  In this section I'll take a moment to step to the side and consider these.
+In simulation, we will often need to repeat an experiment or some action in an experiment many times.  There are several common programming structures to accomplish this.  In this section I'll take a moment to step to the side and consider these.
 
 When deciding which programming structure to use to repeat an action ("loop"), we need to ask three questions:
 1. Before beginning the loop, do we know how many times we need to run the loop?
@@ -266,10 +340,34 @@ If the answer to 1 is *yes* and the answer to 2 is *yes*, we will almost surely 
 
 If the answer to 1 is *yes* and the answer to 2 is *no*, we will be able to use an apply loop.  This will happen very frequently for us; we'll see why in the examples in the next section!
 
+Many R functions have a built-in apply loop or can be given one.  For example, the squaring function will be automatically applied across all the elements of a vector:
+
+```{r}
+x <- c(1,2,5,7)
+x^2
+```
+If we define a function of one variable we can always give it this behavior.  Here is a function that squares anything less than or equal to three and maps everything else to 0.
+```{r}
+f <- function(x) {
+  if (x>3) {
+    return(0)
+  } else {
+    return(x^2)
+  }
+}
+f <- Vectorize(f)
+x <- c(1,2,5,7)
+f(x)
+```
+
+*************
+
 ## Modularity and Simulation
 In computer programming, *modularity* is the programming practice in which programs are broken down into small chunks by using functions and comments, in such a way that the chunks can be individually assessed for performance and the code can be more easily understood.
 
-## Example: Dice Throw Probability
+***********
+
+## Simulation Example: Dice Throw Probability
 Let's first simulate a probability we can compute symbolically, as a check: what is the probability of rolling a sum of 7 when rolling a pair of fair six-sided dice?
 
 Generally, we can fit probability simulations into a common framework:
@@ -316,19 +414,38 @@ And now we can compute the probability that we roll a 7.
 ```{r}
 number_of_7/number_of_experiments
 ```
-Symbolically, we have six 7's out of 36 outcomes, i.e.
+Symbolically, we have 6 "7"'s out of 36 outcomes, i.e.
 ```{r}
 6/36
 ```
-So our estimate is certainly good enough for government work.  If we need to how can we improve our estimate?
+So our estimate is certainly good enough for government work.  If we need to how can we improve our estimate?  Let's take a look at how the estimate improves as the number of experiments increases.  We'll need  function that runs these experiments.
+```{r}
+run_experiments <- function(number_of_experiments) {
+  data <- sapply(1:number_of_experiments,
+                 function(z) one_roll())
+  number_of_7 <- length(which(data==7))
+  return(number_of_7/number_of_experiments)
+}
+run_experiments <- Vectorize(run_experiments)
+```
+Now let's run different numbers of experiments and see how good our estimate is.
+```{r}
+X <- 100*(1:200)
+estimates <- run_experiments(X)
+Y <- abs(estimates-6/36)
+plot(X,Y)
+```
+We observe two things about this plot.  First, as the number of experiments increases, the error in our estimate decreases (with some noise).  Second, as the number of experiments increases, further increasing the number of experiments leads to less improvement in the estimate.  Thus increasing the number of experiments improves the estimate but with diminishing returns.
 
-## Example: A Walk With a Coin
+************
+
+## Simulation Example: A Walk With a Coin
 My son is standing on a long, straight sidewalk running east and west.  I give him a fair coin and the following procedure:
 
 Step 1: Take 1 step east.
 Step 2: Flip the coin.  If Heads, take two more steps east.  If Tails, take two steps west.
 
-After 100 steps, where is he likely to be?  We know that he could be anywhere from 100 steps west to 300 steps east, but how likely are any of those possibilities?
+After 100 steps, where is he likely to be relative to the starting position?  We know that he could be anywhere from 100 steps west to 300 steps east, but how likely are any of those possibilities?
 
 Let's model this with steps east being represented by positive numbers and steps west represented by negative numbers.  We can simulate one trip fairly easily.
 ```{r}
@@ -360,7 +477,9 @@ hist(data,breaks=60,col='blue')
 ```
 How do we interpret this histogram?
 
-## Example: Professor Z's Office Hours
+**********
+
+## Simulation Example: Professor Z's Office Hours
 Professor Z tries to show up at his office for appointments on time.  He really does!  But students and faculty frequently stop him to ask questions or just chat, and he is a typical absent-minded professor, so sometimes he is late.
 
 Estrella is trying to meet Professor Z at his office for an appointment.  She really is!  But between traffic and campus parking, Estrella might be late.
@@ -381,11 +500,11 @@ wait_time <- 15
 Define functions to perform one repetition of this experiment.
 ```{r}
 one_rep <- function() {
-  arrival_time <- runif(2,min=0,max=60)
+  arrival_time <- runif(2,min=0,max=60)  # generate two arrival times
   abs(arrival_time[1]-arrival_time[2])<=15
 }
 ```
-How can we test the one_rep function?
+How can we test the one_rep function?  Try it!
 
 Now repeat the experiment many times and record the data.
 ```{r}
@@ -404,8 +523,8 @@ number_of_experiments <- 100000
 Define functions to perform one repetition of this experiment.
 ```{r}
 one_rep <- function() {
-  arrival_time <- runif(2,min=0,max=60)
-  wait_time <- runif(1,min=0,max=20)
+  arrival_time <- runif(2,min=0,max=60)  # generate two arrival times
+  wait_time <- runif(1,min=0,max=20)  # generate one wait time
   abs(arrival_time[1]-arrival_time[2])<=wait_time
 }
 ```
@@ -422,7 +541,9 @@ length(which(data))/number_of_experiments
 ```
 Does this probability agree with your expectation?
 
-### Example: Optimization
+*********
+
+## Simulation Example: Optimization
 Suppose that we are trying to maximize the function $f(x)=x^5e^{-2x}$ on the interval $[0,5]$.  We could take a calculus approach, but why do that when we have a computer in front of us?  We could just evaluate $f(x)$ for LOTS of $x$ values and see which gives the largest output.
 ```{r}
 set.seed(42)
@@ -443,7 +564,9 @@ inputs[index]
 ```
 Can you convince yourself that this is (approximately) the right answer?
 
-## Example: Area Under a Curve
+**********
+
+## Simulation Example: Area Under a Curve
 Let's suppose that we want to compute the area under the curve $f(x)=x(1-x)$ on the interval $[0,1]$.  Graphically, we are trying to compute the area shown below:
 ```{r}
 X <- seq(from=0,to=1,by=0.01)
@@ -491,7 +614,9 @@ It's worth noting that elementary calculus tells us that the exact answer is
 ```{r}
 integrate(f,lower=0,upper=1)
 ```
-So our darts estimate is quite good.  Computationally, it does not beat the standard numerical integration techniques as long as we have, but it may be helpful in other ways.
+So our darts estimate is quite good.  Computationally, it does not beat the standard numerical integration techniques as long as we have a formula for the function or some way to evaluate it, but it may be helpful in other contexts.
+
+***********
 
 ## Exercises
 **Exercise ** Bad Driving!  A group of five roommates collectively have 10 car accidents in one year.  One of the roommates - Kevin, it's always Kevin! - is responsible for 6 of the 10 accidents.  His roommates tell him to start taking the bus, but Kevin claims it is just bad luck, and that he is no worse a driver than any of the others.
@@ -568,19 +693,79 @@ Game B: You have two biased coins.  If $M$ is a multiple of 3, then you flip coi
 
 This problem is known as [Parrondo's Paradox](https://en.wikipedia.org/wiki/Parrondo%27s_paradox), first formulated in 1996 by Juan Parrondo.  If we expect to lose each game in repeated play, how can we expect to win when randomly switching between these losing games?
 
+**Exercise ** (This exercise involves a bit of guesswork and algebra, so it is a bit more challenging.)  Suppose that we are randomly sampling 20 values without replacement from the numbers 1, 2,\ldots,$N$, where $N$ is a value greater than 100.  We measure $M=$ the maximum value in the sample.
 
+(a) Create a simulation that measures $M$.  
+
+(b) If $N=150$, what is the expected value of $M$?
+
+(c) Repeat (b) for $N=$200,250,\ldots,950,1000.
+
+(d) Make a plot of the expected value of $M$ versus $N$.  From your plot guess a simple relationship of the form $M=f(N)$.
+
+(e) Invert your function, solving for $N$, to obtain a formula of the form $N=f^{-1}(M)$.  This formula tells you how to compute an estimator for the maximum value in the pool, $\hat{N}=f^{-1}(M)$.
+
+(f) Use your formula to compute your estimator $\hat{N}$ by simulating $M$ once for each of $N=150,200,\ldots,1000$ and computing $\hat{N}$ for each of those $M$ values.  How good is your estimator?
+
+This is a very simple version of the [German tank problem](https://en.wikipedia.org/wiki/German_tank_problem).  During World War II, Allied spies were trying to estimate the number of German tanks produced in certain factories.  Being very precision minded, German engineers put a serial number on each tank component, numbering them 1 through $N$.  By seeing a few serial numbers and using an appropriate estimator, the Allies were able to accurately estimate numbers of tanks produced and take appropriate precautions.
+
+
+**Exercise ** Use a simulation to find the area under the graph of the function $f(x)=e^{-x^2}$ between $x=0$ and $x=3$, using $10^2$, $10^3$, $10^4$, and $10^5$ darts.  How does your area estimate change as you increase the number of darts?
+
+**Exercise ** In the previous exercise you probably chose your image window to be something like $0\leq x\leq 3$, $0\leq y\leq 3$ (why?).  But what if you had chosen your window to be $0\leq x\leq 3$, $0\leq y\leq 3$ ?  Repeat the previous exercise with this new window, and keep track of the percentage of rejected darts for each estimate.  Can you see why it is valuable to have a tight window around the area you want to estimate?
 
 \newpage
 # Sampling
 In this section we will dig a little more deeply into how random number generators for various distributions can be programmed.  This section is a little sparser, but contains links to lots of useful web content.
 
+************
+
 ## Distributions in R
-Here is some information about the "built-in" distributions in R: https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Distributions.html .  In an introductory statistics class, you will probably have encountered the binomial, Poisson, normal, and chi-squared distributions.
+Here is some information about the "built-in" distributions in R: https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Distributions.html .  In an introductory statistics class, you will probably have encountered the binomial, Poisson, normal, and chi-squared distributions, at minimum.
+
+*************
 
 ## The Monte Carlo Method
-The Monte Carlo method is really not a method, but an entire class of computational algorithms that focus on answering questions through simulation.  Read more here: https://en.wikipedia.org/wiki/Monte_Carlo_method .  (As a point of interest, I was supported by Stan Ulaw's seminar and scholarship as a graduate student.)  References [3] and [4] contain some excellent material discussing Monte Carlo methods.  Reference [4] contains code and excellent exercises written in Matlab; Python users using the numpy and pylab packages will find this highly approachable.  [5] is a more advanced mathematical text, aimed at clarifying the connections between Monte Carlo methods and the Bayesian approach to statistical analysis.  [6] moves in the computational direction instead, clarifying the connections between Monte Carlo methods and the Bayesian approach using Python and the pymc3 package.
+The Monte Carlo method is really not a method, but an entire class of computational algorithms that focus on answering questions through simulation.  Read more here: https://en.wikipedia.org/wiki/Monte_Carlo_method .  (As a point of interest, I was supported by Stan Ulam's seminar and scholarship as a graduate student.)  References [3] and [4] contain some excellent material discussing Monte Carlo methods.  Reference [4] contains code and exercises written in Matlab; Python users using the numpy and pylab packages will find this easily readable.  [5] is a more advanced mathematical text, aimed at clarifying the connections between Monte Carlo methods and the Bayesian approach to statistical analysis.  [6] moves in the computational direction instead, clarifying the connections between Monte Carlo methods and the Bayesian approach using Python and the pymc3 package.
 
 In the simulation section of these notes we have seen examples of estimating probabilities through simulation and optimizing functions through simulation.  However, we have not really seen simulations used to generate samples from distributions of continuous random variables.  How do computer programs work "under the hood"?  How does R generate 10000 draws from a beta distribution?  We'll tackle this in the next two sections.
+
+*********
+
+## Box-Ticket Sampling
+Suppose that we have a discrete random variable with a known distribution function.  Then in many cases we can sample from this distribution by creating a "box" filled with "tickets" and repeatedly draw tickets with replacement to form the sample.
+
+For example, suppose that we have a random variable with density
+\begin{center}
+\begin{tabular}{c|c}$X=$ & $f(x)$\\ \hline
+0 & 0.1\\ 1 & 0.3\\ 2 & 0.5\\ 3 & 0.1\\ \hline
+\end{tabular}
+\end{center}
+Then we can build a box with 100 tickets, 10 of which are 0's, 30 of which are 1's, 50 of which are 2's, and 10 of which are 3's.  In R:
+```{r}
+box <- c(rep(0,10),rep(1,30),rep(2,50),rep(3,10))
+```
+To draw a sample from the box of a given size (with or without replacement), we can use the sample function.
+```{r}
+data <- sample(box,500,replace=TRUE)
+barplot(table(data))
+```
+This is a very useful technique when we have a data set and we want to simulate a sample from the population.  For example,
+
+```{r}
+data(Loblolly)
+X <- as.numeric(as.character(Loblolly$Seed))
+```
+$X$ is a random variable with
+```{r}
+length(unique(X))
+```
+unique outcomes.  If we wish to simulate a sample of size 500 from this distribution, we can simply use sample:
+```{r}
+data <- sample(X,500,replace=TRUE)
+barplot(table(data))
+```
+This is a tremendously useful tool, but we can't "see" what R is doing with the sample function.  This next section delves into that a bit.
 
 ## Inversion Sampling
 Suppose that $X$ is a continuous random variable with distribution function $F(x)=P(X\leq x)$.  Then $F$ is an increasing function of $x$, and will have an "s shape",similar to the following.
@@ -593,9 +778,9 @@ These curves are sometimes called *s-shaped* curves, informally.
 
 Let's note three facts about this distribution function $F$.  First,$$\lim_{x\to -\infty}F(X)=0$$Second,$$\lim_{x\to\infty}F(x)=1$$And third, $F$ is an invertible function.
 
-Inversion sampling uses these three facts and the random number number generator for the uniform distribution on $[0,1]$.  The process is as follows:
+Inversion sampling uses these three facts and the random number generator for the uniform distribution on $[0,1]$.  The process is as follows:
 
-Set-up:  You'll need your distribution function in some format.  For this example I'll take mine to be written in the vectors of $X$ and $Y$ coordinates used to generate the graph above.
+Set-up:  You'll need your distribution function written in some format (vectors of $x$ and $y$ coordinates are easiest).  For this example I'll take mine to be written in the vectors of $X$ and $Y$ coordinates used to generate the graph above.
 
 Step 1: Draw a random number from the uniform distribution on $[0,1]$.  This will represent a random output of your distribution function, so I will call mine $y$.
 ```{r}
@@ -616,7 +801,7 @@ plot(X,Y)
 abline(h=y,col='red')
 abline(v=the_draw,col='blue')
 ```
-Here we have drawn a sample value of `r the_draw`.  If we repeat this many times, we generate many draws from the distribution.
+Here we have drawn a sample value of $x=$`r the_draw`.  If we repeat this many times, we generate many draws from the distribution.
 ```{r}
 set.seed(42)
 y <- runif(1000)
@@ -624,7 +809,8 @@ find_X <- function(y) {
   location <- which.min(abs(Y-y))
   return(X[location])
 }
-draws <- sapply(y,find_X)
+find_X <- Vectorize(find_X)
+draws <- find_X(y)
 ```
 Our data is in the variable draws; what does it look like?
 ```{r}
@@ -632,6 +818,7 @@ hist(draws,breaks=40)
 ```
 Our sample seems to fall roughly into the shape of a normal distribution.  Because our random variable was normal, this seems like a good confirmation of this sampling technique.
 
+### Example
 How does this work for discrete random variables and for data?  As an example, let's look at the yearly sunspot data set in R.
 ```{r}
 data(sunspot.year)
@@ -653,7 +840,7 @@ We can now find the distribution function by summing.
 Y <- cumsum(f)
 plot(X,Y)
 ```
-And now that we have the distribution we can perform inversion sampling as we did for the normal distribution.
+And now that we have the distribution function we can perform inversion sampling as we did for the normal distribution.
 ```{r}
 set.seed(42)
 y <- runif(1000)
@@ -666,13 +853,14 @@ hist(draws,breaks=60)
 ```
 This looks similar to our original distribution of sunspots, so it seems good.
 
-However, I have to stress that this is definitely not the most efficient way to sample from data representing a discrete random variable; it's a "hypothetically, we could..." discussion.  The easiest approach is to just use the sample function on your original data set!  The procedure we ran through is more or less what R does under the hood with the sample function.
+However, I have to stress that this is definitely not the most efficient way for you to sample from data representing a discrete random variable; it's a "hypothetically, we could..." discussion.  The easiest approach is to just use the sample function on your original data set, as we did in the box-ticket model section!  The procedure we ran through is more or less what R does under the hood with the sample function.
 ```{r}
 draws=sample(spots,1000,replace=TRUE)
 hist(draws,breaks=60)
 ```
 
-Okay, but what if our random variable is continuous and we wish to sample from it?  Let's examine the Nile River water flow data set.
+### Example
+Okay, but what if our random variable is continuous, we have some data sampled from it but no formula, and we wish to sample from the random variable?  Let's examine the Nile River water flow data set.
 ```{r}
 data(Nile)
 head(Nile)
@@ -684,9 +872,8 @@ hist(Nile)
 We can fit a smooth density function to the Nile data.  (Use ?density in R to read more about this function.)
 ```{r}
 Nile_density <- density(Nile)
-plot(Nile_density)
 ```
-
+We need to create an approximating function and then create the vectors of inputs and outputs for inversion sampling.  We have to be a bit careful here, because we want our density function to be 0 outside of a certain range; thus the definition of $f$ in the code below.
 ```{r}
 Nile_approx <- approxfun(Nile_density)
 f <- function(x){
@@ -700,7 +887,12 @@ f <- function(x){
 f <- Vectorize(f)
 X <- min(Nile):max(Nile)
 Y <- sapply(X,function(z) integrate(f,lower=-Inf,upper=z,stop.on.error = FALSE)$value)
-plot(X,Y)
+hist(Nile,freq=FALSE)
+lines(X,f(X),col='blue',lwd=2)
+```
+And here is the distribution:
+```{r}
+plot(X,Y,type='l',lwd=2)
 ```
 We can now sample from this distribution function using inversion sampling.
 ```{r}
@@ -710,10 +902,13 @@ find_X <- function(y) {
   location <- which.min(abs(Y-y))
   return(X[location])
 }
-draws <- sapply(y,find_X)
+find_X <- Vectorize(find_X)
+draws <- find_X(y)
 hist(draws,breaks=60)
 ```
-The benefit of this approach over sampling from the original data set is that the approximating density function has smoothed out the data.  We now get some data points in the gaps in between the values in the original data set.  This fits our mental model of flow rates of the Nile; there's no reason that the river may have a flow rate of 702 one year and 714 another year, but never 710.  If we sample from the original data set we'll never draw a sample value of 710, but with the smoothed density, we might.
+The benefit of this approach over sampling from the original data set is that the approximating density function has smoothed out the data.  We now get some data points in the gaps in between the values in the original data set.  This fits our mental model of flow rates of the Nile; there's no reason that the river may have a flow rate of 702 one year and 714 another year, but never 710.  If we sample from the original data set we'll never draw a sample value of 710 because 710 is not a data point, but with the smoothed density, we might.
+
+**********
 
 ## Rejection Sampling
 Since we already have a sampling method, why introduce another?  Well, inversion sampling works quite efficiently for a single random variable but not for multivariable scenarios.
@@ -762,9 +957,21 @@ plot(x1,x2)
 ```
 Note the heavier clustering near $(0,0)$.  The density function is maximal there, and so we should expect tighter clustering in our sample.
 
-There are a number of ways to improve a rejection sampling scheme.  Chapter 2 in [3] has more details on rejection sampling, and chapter 2 in [4] has several examples of designing sampling algorithms using inversion schemes and in some cases and rejection sampling in others.
+There are a number of ways to improve a rejection sampling scheme.  Chapter 2 in [3] has more details on rejection sampling, and chapter 2 in [4] has several examples of designing sampling algorithms using inversion schemes in some cases and rejection sampling in others.
+
+************
 
 ## Exercises
+
+**Exercise ** Draw a sample of size 100 without replacement from the *stations* variable of the *quakes* dataset in R.  Display your sample and the stations variable using barplots.  How similar are they?
+
+**Exercise ** Repeat the process from the Inversion Sampling section to draw a sample of size 1000 from the Student t distribution.
+
+**Exercise ** Repeat the process from the Inversion Sampling section to draw a sample of size 1000 from the random variable with density function$$f(x)=\left\{\begin{array}{cc} \frac{3}{8}x^2 & 0\leq x\leq 2\\ 0 & \text{otherwise}\end{array}\right. $$
+
+**Exercise ** Use rejection sampling to draw a sample of size 1000 from the random variable with density function$$f(x)=\left\{\begin{array}{cc} \frac{3}{8}x^2 & 0\leq x\leq 2\\ 0 & \text{otherwise}\end{array}\right. $$
+
+
 
 \newpage
 # References
