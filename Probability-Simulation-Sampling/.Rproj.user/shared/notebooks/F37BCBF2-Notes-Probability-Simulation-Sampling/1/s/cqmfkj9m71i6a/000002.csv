@@ -1,0 +1,2 @@
+"0","interval <- qnorm(c(.1,.9),mean=meanmu,sd=meansigma)"
+"0","hist(X,breaks=60,freq=FALSE)"

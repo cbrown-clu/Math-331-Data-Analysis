@@ -1,0 +1,2 @@
+"0","X <- faithful$waiting"
+"0","hist(X,breaks=60)"

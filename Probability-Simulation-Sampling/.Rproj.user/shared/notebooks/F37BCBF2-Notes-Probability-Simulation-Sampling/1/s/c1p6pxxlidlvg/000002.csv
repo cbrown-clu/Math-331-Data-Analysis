@@ -1,0 +1,3 @@
+"0","data(faithful)"
+"0","X <- faithful$eruptions"
+"0","hist(X,breaks=60)"
