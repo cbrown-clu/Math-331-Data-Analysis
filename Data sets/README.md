@@ -12,4 +12,5 @@ The data sets in this repository are provided as comma-separated value files (CS
 * The [Kentish plover behavior dataset](https://www.datadryad.org/handle/10255/dryad.126818).
 * [Red flour beetle behavioral data set](https://data.nal.usda.gov/dataset/data-red-flour-beetle-coleoptera-tenebrionidae-response-volatile-cues-varies-strain-and-behavioral-assay).
 * [Mudcrab behavioral data set](https://www.bco-dmo.org/dataset-deployment/638861)
+* Quakes is the seismic event data set from the region near Thousand Oaks.  Events are historical dating back to 1933.  This data was obtained from the [Southern California Earthquake Center's Data Catalog](http://service.scedc.caltech.edu/eq-catalogs/date_mag_loc.php).
 
