@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE,
 ```
 
 # 0. Introduction
-These notes are written for the Math 331 Data Analysis With R course, and are a quick overview of three areas at the boundary between mathematics and computer science.  The goals of these notes are:
+These notes are written for the Math 331 Data Analysis With R course, and are a quick overview of three areas in mathematics and computer science.  The goals of these notes are:
 
 * Introduce probability terminology and theory.
 
@@ -24,12 +24,18 @@ These notes are written for the Math 331 Data Analysis With R course, and are a 
 
 * Provide some practical examples for using R for simulations and sampling.
 
+* Provide an example applying these techniques to modeling data.
+
+Where these notes are complete they are not coherent, and where they are coherent they are not complete.  Their one saving grace is that they are short or at least no longer than they need to be, and I have no plans to embiggen them anytime soon.
+
+Acknowledgements go out to my former students who have read bits and pieces of these notes over the years: Robert Spangler, Christina Messer, Justine Duke, Lauren Chrislu, Samuel Oh, Diana Salazar, Christopher Kromm, and Laura Willits.  Special thanks to Shannon Pesta, whose capstone project started me thinking about whether and how this material should be presented.
+
 \newpage
 # 1. Probability
 
 ## Terminology and Notation
 
-An *event space* or *sample space* $S$ is a nonempty set.  An *event* is a subset of the given sample space.  Visually, we can represent events in sample spaces as .
+An *event space* or *sample space* $S$ is a nonempty set.  An *event* is a subset of the given sample space.  Visually, we can represent sample spaces as rectangles and events as ovals in them\ldots so, your basic Venn diagram.
 
 Probability is a complicated term.  In these notes we give two rough definitions of probability, each of which is useful in some scenarios.  For more precise mathematical definitions of probability see [1] and [2].
 
@@ -52,7 +58,7 @@ The event "not $A$" is called the *complement of* $A$, and is written $A^C$.  If
 **********
 
 ## Properties of Probability
-Chapters 2 and 3 of [1] contain a standard presentation of the properties of probability.  Chapter 1 of [2] contains a more advanced look at this material.  Here, we recount only the axioms and the basic propositions at a basic level.
+Chapters 2 and 3 of [1] contain a standard presentation of the properties of probability.  Chapter 1 of [2] contains a more advanced look at this material.  Here, we recount only the axioms and the basic propositions.
 
 Suppose that $S$ is a given sample space.  Then a probability measure on $S$ is a function $P$ mapping events to real numbers, with $P$ satisfying the following three axioms:
 
@@ -118,7 +124,26 @@ As a second example, if our experiment is to repeatedly flip a fair coin until t
 
 A random variable is *discrete* if its range is made up of numbers separated by gaps, with the smallest gap being positive.  For example, if the range of $X$ is $\{1,2,3\}$ or $\{2,4,6,8,\ldots\}$, $X$ is a discrete random variable.  Otherwise, the random variable is said to be *continuous*.
 
-Given a discrete random variable $X$, the *probability mass function* for $X$ is the function $f(x)=P(X=x)$, and the *distribution function* is$$F(x)=P(X\leq x)=\sum_{z\leq x}f(z)$$We note in this case that if $x_1<x_2$ and no value in the range of $X$ is between $x_1$ and $x_2$ then we have $F(x_2)-F(x_1)=f(x_2)$.  So, we can create the density function $f$ from the distribution and vice versa.
+Given a discrete random variable $X$, the *probability mass function* for $X$ is the function $f(x)=P(X=x)$, and the *distribution function* is$$F(x)=P(X\leq x)=\sum_{z\leq x}f(z)$$We note in this case that if $x_1<x_2$ and no value in the range of $X$ is between $x_1$ and $x_2$ then we have $F(x_2)-F(x_1)=f(x_2)$.  So, we can create the density function $f$ from the distribution and vice versa.  For example, suppose we have a random variable $X$ with mass function given by the table
+\begin{center}
+\begin{tabular}{c|r}$X=$ & $p(x)$\\ \hline 0 & 0.1\\ 1 & 0.6\\ 2 & 0.3\\ \hline
+\end{tabular}
+\end{center}
+Then we can compute the distribution by computing a cumulative sum.
+\begin{center}
+\begin{tabular}{c|r}$X=$ & $p(x)$\\ \hline 0 & 0.1\\ 1 & 0.1+0.6=0.7\\ 2 & 0.1+0.6+0.3=1\\ \hline
+\end{tabular}
+\end{center}
+On the other hand, if we have a random variable $X$ with distribution given by
+\begin{center}
+\begin{tabular}{c|r}$X=$ & $F(x)$\\ \hline 0 & 0.1\\ 1 & 0.7\\ 2 & 1\\ \hline
+\end{tabular}
+\end{center}
+then we can compute the mass function by appropriate subtractions (work from the bottom up!).
+\begin{center}
+\begin{tabular}{c|r}$X=$ & $F(x)$\\ \hline 0 & 0.1 - 0 = 0.1\\ 1 & 0.7 - 0.1 =0.6\\ 2 & 1 - 0.7 = 0.3\\ \hline
+\end{tabular}
+\end{center}
 
 Given a continuous random variable $X$, the *probability density function* for $X$ is the function $f(x)$ such that$$P(X\leq x)=\int_{-\infty}^xf(z)\, dz$$and the *continuous distribution function* for $X$ is the function$$F(x)=P(X\leq x)=\int_{-\infty}^xf(z)\, dz$$In the language of calculus, $F'(x)=f(x)$, so the rate of change of the distribution is the density.  Thus we can create the density from the distribution and the distribution from the density.
 
@@ -127,7 +152,7 @@ In both the discrete and continuous cases, the distribution is a sort of sum of 
 *************
 
 ## Expectation and Variance
-The *expected value of a discrete random variable* $X$, $E(X)$, is given by the formula$$E(X)=\sum_xxp(x)$$where $p$ is the probability mass function of $X$ and this summ is computed over all $x$ values in the range of $X$.  For example, if the random variable has mass given by the table
+The *expected value of a discrete random variable* $X$, $E(X)$, is given by the formula$$E(X)=\sum_xxp(x)$$where $p$ is the probability mass function of $X$ and this sum is computed over all $x$ values in the range of $X$.  For example, if the random variable has mass given by the table
 \begin{center}
 \begin{tabular}{c|c}$X=$ & $p(x)$\\ \hline 0 & 0.1\\ 1 & 0.6\\ 2 & 0.3\\ \hline
 \end{tabular}
@@ -152,7 +177,21 @@ Another measurement we can make about a random variable is the average deviation
 
 \newpage
 ## Exercises
-**Exercise 1.1** Suppose that we flip a fair coin 5 times and record the face showing after each flip. (a) How large is the sample space for this experiment?  (b) Write examples of two elements of the sample space.  (c) How many of the elements of the sample space begin with a Heads?  (d) How many of the elements of this sample space begin with a Tails?  (e) How many of the elements of the sample space begin with a Heads and end with a Tails?  (f) Are the events "Begins with a Heads" and "Begins with a Tails" mutually exclusive?  (g) Are the events "Begins with a Heads" and "Ends with a Tails" mutually exclusive?
+**Exercise 1.1** Suppose that we flip a fair coin 5 times and record the face showing after each flip. 
+
+(a) How large is the sample space for this experiment?  
+
+(b) Write examples of two elements of the sample space.  
+
+(c) How many of the elements of the sample space begin with a Heads?  
+
+(d) How many of the elements of this sample space begin with a Tails?  
+
+(e) How many of the elements of the sample space begin with a Heads and end with a Tails?  
+
+(f) Are the events "Begins with a Heads" and "Begins with a Tails" mutually exclusive?  
+
+(g) Are the events "Begins with a Heads" and "Ends with a Tails" mutually exclusive?
 
 **Exercise 1.2** For a certain species of cat, the number of young produced each year per mother is a random variable $X$.  Current data suggests that $X$ has the mass function
 \begin{center}
@@ -160,13 +199,26 @@ Another measurement we can make about a random variable is the average deviation
 0 & 0.3\\ 1 & 0.5\\ 2 & 0.15\\ 3 & 0.05\\ \hline
 \end{tabular}
 \end{center}
-(a) What is the probability that a mother cat has 2 or more young in a given year?  (b) What is the probability that a mother cat has at least one young in a given year?  (c) What is the expected number of young for a mother cat in a year?  (d) What is the variance in the number of young for a mother cat in a year?  (e) A similar species of cat has $Y$ young per year per mother, where $Y$ has the mass function
+
+(a) What is the probability that a mother cat has 2 or more young in a given year?  
+
+(b) What is the probability that a mother cat has at least one young in a given year?  
+
+(c) What is the expected number of young for a mother cat in a year?  
+
+(d) What is the variance in the number of young for a mother cat in a year?  
+
+(e) A similar species of cat has $Y$ young per year per mother, where $Y$ has the mass function
 \begin{center}
 \begin{tabular}{c|c}$Y=$ & $p(y)$\\ \hline
 0 & 0.2\\ 1 & 0.5\\ 2 & 0.15\\ 3 & 0.1\\ 4 & 0.05\\ \hline
 \end{tabular}
 \end{center}
-How do the mean and variance of $Y$ compare to $X$?  What about the mass functions would suggest this with no calculations?  (f) Use R to build a sample space for $X$, draw a large sample, and compute the mean and variance of the sample as we did earlier in the notes.  You'll want to use the *mean* and *var* functions in R.  (g) Repeat (f) fpr the random variable $Y$.
+How do the mean and variance of $Y$ compare to $X$?  What about the mass functions would suggest this with no calculations?  
+
+(f) Use R to build a sample space for $X$, draw a large sample, and compute the mean and variance of the sample as we did earlier in the notes.  You'll want to use the *mean* and *var* functions in R.  
+
+(g) Repeat (f) fpr the random variable $Y$.
 
 **Exercise 1.3** Suppose that $X$ is a random variable that only produces one output, $c$, and $p(c)=1$ (so, $X$ isn't very random, is it?).  What are the expected value and variance of $X$?
 
@@ -176,7 +228,12 @@ How do the mean and variance of $Y$ compare to $X$?  What about the mass functio
 0 & 0.3\\ 1 & 0.5\\ 2 & 0.15\\ 3 & 0.05\\ \hline
 \end{tabular}
 \end{center}
-(a) Are $X=0$ and $X=1$ mutually exclusive events?  (b) Using the third axiom of probability, compute $P(X<3)$.  (c)  Using the complementation rule compute $P(X<3)$.  (c) Is $P(X<2)$ greater than, less than, or equal to $P(X<3)$?  Try to explain this without resorting to computing these probabilities.
+
+(a) Are $X=0$ and $X=1$ mutually exclusive events?  
+
+(b) Using the third axiom of probability, compute $P(X<3)$.  (c)  Using the complementation rule compute $P(X<3)$.  
+
+(c) Is $P(X<2)$ greater than, less than, or equal to $P(X<3)$?  Try to explain this without resorting to computing these probabilities.
 
 **Exercise 1.5** Suppose that $X$ is a random variable with mass function
 \begin{center}
@@ -184,19 +241,28 @@ How do the mean and variance of $Y$ compare to $X$?  What about the mass functio
 0 & 0.3\\ 1 & 0.5\\ 2 & 0.15\\ 3 & 0.05\\ \hline
 \end{tabular}
 \end{center}
-(a) Compute the probability $P(X\geq 2|X\neq 0)$.  (b) Compute the probability $P(X=0|X<3)$.  (c) Compute the probability $P(X=0|X=3)$.  (d) Are $X=0$ and $X=3$ mutually exclusive events?  Explain.  (e) Are $X=0$ and $X=3$ independent events?  Explain.  (f) So, does "mutually exclusive" mean the same thing as "independent"?
+
+(a) Compute the probability $P(X\geq 2|X\neq 0)$.  
+
+(b) Compute the probability $P(X=0|X<3)$.  
+
+(c) Compute the probability $P(X=0|X=3)$.  
+
+(d) Are $X=0$ and $X=3$ mutually exclusive events?  Explain.  
+
+(e) Are $X=0$ and $X=3$ independent events?  Explain.  (f) So, does "mutually exclusive" mean the same thing as "independent"?
 
 **Exercise 1.6** Show that if $A$ and $B$ are mutually exclusive events then $P(A\cup B)=P(A)+P(B)$.
 
-**Exercise 1.7** Suppose that we flip a fair coin twice in a row, in such a way that the two flips are independent of one another, and thus the events $X_1=$Heads on flip 1 and $X_2=$Heads on flip 2 are independent events.  (a) What is the probability $P(X_1\cap X_2)$?  (b) If we continue this on out for a while, what is the probability $P(X_1\cap\ldots\cap X_n)$?  (c) What is the probability of flipping at least one Tail in $n$ flips?  (Hint: the complement of the event "at least one Tail" is "no Tails".)
+**Exercise 1.7** Suppose that we flip a fair coin twice in a row, in such a way that the two flips are independent of one another, and thus the events $X_1=$Heads on flip 1 and $X_2=$Heads on flip 2 are independent events.  
 
-**Exercise 1.8** Bayes' Theorem is often interpreted in the following way.  We think of $P(A)$ as our belief about the probability of $A$, before we have observed an event $B$, and we think about $P(A|B)$ as our belief about the probability of $A$, after we have observed an event $B$.  So we often call $P(A)$ a *prior* probability and $P(A|B)$ a *posterior* probability.  $P(B|A)$ is the likelihood that we actually observe $B$ given that $A$ occurs, and so is called the *likelihood*.  Then Bayes' Theorem reads as "the posterior is directly proportional to the product of the likelihood and the prior".  That is, we can update our estimation of the probability of $A$ by playing a hypothetical game: "if $A$ were actually to occur, then the likelihood of $B$ is \ldots " and combining the results with our prior belief about the probability of $A$.  To put this on a slightly more concrete  footing, think of $A$ as the hypothesis in an experiment, and $B$ as some data we will observe.  Then we can update our belief in the hypothesis $A$ based on collected data $B$ by using Bayes' Theorem.  Sounds sort of like\ldots science!
+(a) What is the probability $P(X_1\cap X_2)$?  
 
-Suppose we have a coin, and we have the hypothesis $A$=the coin is fair.  To test this we decide to flip the coin 10 times.  (a) Compute the prior $P(A)$.  (b) Compute the likelihood $P(B|A)$.  (c) Unfortunately at this point, it is exceedingly difficult to compute $P(B)$.  Why?  What did we know in part (b) that we do not know now?
+(b) If we continue this on out for a while, what is the probability $P(X_1\cap\ldots\cap X_n)$?  
 
-Part (c) leads us into a very deep rabbit hole called Bayesian methods in statistics.  They are generally quite flexible and produce easily interpretable results\dots but most of the time we can not compute in the Bayesian framework by hand.  Bayesian methods really only became common in the late 1990's, but since then have seen an explosion in adoption; they are considered essential tools by many ecologists, biologists, and market analysts.
+(c) What is the probability of flipping at least one Tail in $n$ flips?  (Hint: the complement of the event "at least one Tail" is "no Tails".)
 
-**Exercise 1.9** Suppose that a plane has crashed in one of three regions and we are in charge of running the search.  The plane is equally likely to have crashed in any one of the three regions.  Region A is mountainous and the probability of finding the plane in a search of A given that it is in A is only 0.2.  Regions B and C are grassy hills, and so the probability of finding the plane on a search of B or C given that it crashed in that region is 0.6.
+**Exercise 1.8** Suppose that a plane has crashed in one of three regions and we are in charge of running the search.  The plane is equally likely to have crashed in any one of the three regions.  Region A is mountainous and the probability of finding the plane in a search of A given that it is in A is only 0.2.  Regions B and C are grassy hills, and so the probability of finding the plane on a search of B or C given that it crashed in that region is 0.6.
 
 (a) Suppose we first search region B and do not find the plane.  Use Bayes' Theorem to update the probabilities that the plane crashed in regions A, B, or C.
 
@@ -204,7 +270,7 @@ Part (c) leads us into a very deep rabbit hole called Bayesian methods in statis
 
 (c) Which region should we search next?  Why?
 
-**Exercise 1.10** Suppose that $X$ is a random variable with mass function
+**Exercise 1.9** Suppose that $X$ is a random variable with mass function
 \begin{center}
 \begin{tabular}{c|c}$X=$ & $p(x)$\\ \hline
 0 & 0.3\\ 1 & 0.5\\ 2 & 0.15\\ 3 & 0.05\\ \hline
@@ -215,7 +281,7 @@ Part (c) leads us into a very deep rabbit hole called Bayesian methods in statis
 
 (b) Compute $P(X\leq 2)$ using the distribution function.
 
-**Exercise 1.11** Suppose that $X$ is a random variable with distribution function
+**Exercise 1.10** Suppose that $X$ is a random variable with distribution function
 \begin{center}
 \begin{tabular}{c|c}$X=$ & $F(x)$\\ \hline
 0 & 0.1\\ 1 & 0.4\\ 2 & 0.9\\ 3 & 1\\ \hline
@@ -224,7 +290,7 @@ Part (c) leads us into a very deep rabbit hole called Bayesian methods in statis
 
 Find the probability mass function for $X$.
 
-**Exercise 1.12** Suppose that $X$ is a continuous random variable with density function$$f(x)=\left\{\begin{array}{cc} 2e^{-2x} & x\geq 0\\ 0 & \text{otherwise}\end{array}\right. $$This is the exponential distribution.
+**Exercise 1.11** Suppose that $X$ is a continuous random variable with density function$$f(x)=\left\{\begin{array}{cc} 2e^{-2x} & x\geq 0\\ 0 & \text{otherwise}\end{array}\right. $$This is the exponential distribution.
 
 (a) Compute the distribution function for $X$.
 
@@ -232,7 +298,7 @@ Find the probability mass function for $X$.
 
 (c) Compute the mean of $X$.
 
-**Exercise 1.13** For each of the following named distributions, (i) look up the distribution on Wikipedia and write a few sentences on what it is used for, then find the distribution in R and (ii) graph the density for a few example parameter sets, (iii) generate a sample from the random variable of size 1000, and (iv) plot the histogram of your sample.
+**Exercise 1.12** For each of the following named distributions, (i) look up the distribution on Wikipedia and write a few sentences on what it is used for, then find the distribution in R and (ii) graph the density for a few example parameter sets, (iii) generate a sample from the random variable of size 1000, and (iv) plot the histogram of your sample.
 
 (a) Binomial 
 
@@ -247,6 +313,12 @@ Find the probability mass function for $X$.
 (f) Exponential
 
 (g) Beta
+
+**Exercise 1.13** Prove Proposition 4 from the Probability Axioms.
+
+**Exercise 1.14** Prove Proposition 5 from the Probability Axioms.
+
+**Exercise 1.15** Prove Proposition 6 from the Probability Axioms.
 
 \newpage
 # 2. Simulation
@@ -263,7 +335,7 @@ Generally, most computer programming languages have some sort of function that r
 ```{r}
 runif(1)
 ```
-The argument to this function, 1, tells us that R will return a resulting vector of length 1, i.e. only one randomly generated number.  If we need to draw several random numbers between 0 and 1, we can do so with a single command.
+The argument to this function, 1, tells us that R will return a resulting vector of length 1, i.e. only one randomly generated number.  If we need to draw several uniformly distributed random numbers between 0 and 1, we can do so with a single command.
 ```{r}
 runif(20)
 ```
@@ -273,7 +345,7 @@ data <- runif(100000)
 ```
 On my machine, generating these hundred thousand values required about half a second.
 
-Digital random number generators are not really random, but work something like a roulette wheel; if we knew how fast the wheel was spun, how fast the ball was rolled, and all the little irregularities about how this particular roulette wheel spins, then we could use physics to correctly predict the outcome of the roulette spin.  That is, roulette wheels are not really random, they are deterministic and have sensitive dependence on initial conditions; since it is nearly impossible to know the initial conditions precisely enough, the roulette wheel "feels" random.  Digital random number generators are similar, but with one important difference.  For our digital random number generators, we can set the initial conditions.  This means that experiments can be made precisely repeatable.  For example, if I execute
+Digital random number generators are not really random, but work something like a roulette wheel; if we knew how fast the wheel was spun, how fast the ball was rolled, and all the little irregularities about how this particular roulette wheel spins, then we could use physics to correctly predict the outcome of the roulette spin.  That is, roulette wheels are not really random; they are deterministic and have sensitive dependence on initial conditions.  Since it is nearly impossible to know the initial conditions precisely enough, the roulette wheel "feels" random.  Digital random number generators are similar, but with one important difference.  For our digital random number generators, we can set the initial conditions.  This means that experiments can be made precisely repeatable.  For example, if I execute
 ```{r}
 runif(5)
 ```
@@ -358,11 +430,32 @@ f <- Vectorize(f)
 x <- c(1,2,5,7)
 f(x)
 ```
+Here is a great trick, and one that comes up often!  I frequently need to perform some experiment which has the form of a function.  I need to repeat it some number of times, but I don't actually need to provide any inputs.  Since each pass through my loop is independent of all the others, I should be able to avoid a for or a while loop.  I can do this with Vectorize by providing a dummy variable for my function.  For example, let's suppose I want to flip a fair coin some number of times and record the flips with 1's for Heads and 0's for Tails.  I can write my code as follows:
+```{r}
+run_experiment <- Vectorize(  # Vectorize here!
+  function(x=17) {             #dummy variable x=17 here!  You can initalize x to whatever you wish.
+    sample(c(0,1),1)
+  }
+)
+data <- run_experiment(1:20) # run the experiment 20 times and store the results in data
+```
 
 *************
 
 ## Modularity and Simulation
 In computer programming, *modularity* is the programming practice in which programs are broken down into small chunks by using functions and comments, in such a way that the chunks can be individually assessed for performance and the code can be more easily understood.
+
+There are five working principles you should try to adhere to:
+
+1. **Use variables, not constants.**  That is, if you need to use the constant "100" in a conceptual way in your code, e.g. as a sample size, then store it in a variable and then use that variable in the code instead of writing the constant 100.  Storytime: I once had a student who routinely violated this principle.  Whenever he needed to change his constants in his code, he would simply use the Find-Replace function to change all the instances.  Well, one day, he need to change a certain constant "2" to a "5" in his code.  Find-Replace\ldots and he changed *all* the 2's to 5's, everywhere in his code.  He also didn't notice for a while, so undoing was no longer an option.  Since he had used the number 2 in some of his variable and function names, and all of them changed to 5's, his code became unuseable.  I have no idea how long it took him to fix this, but I did hear from his other instructors that he skipped classes for an entire week.
+
+2. **Use functions for small, conceptually simple tasks.**  It is easier to test code in pieces when tasks have been separated into functions.  It is also easier to read code as well.  You should use descriptive names for the tasks your functions perform.
+
+3. **Use functions to tie together small tasks into a larger workflow.**
+
+4. **Use functions for repeatability.**  Any task that needs to be repeated should be encoded as a function.
+
+5. **Comment to explain code chunks.**
 
 ***********
 
@@ -384,26 +477,25 @@ one_die <- 1:6
 ```
 Next, let's define a function to roll two fair six-sided dice and sum the faces showing.
 ```{r}
-one_roll <- function() {
+one_roll <- Vectorize(function(x=1) {
   return(sum(sample(one_die,2,replace=TRUE)))
-}
+})
 ```
 Before we go on to write the rest of our code, let's test this function.
 ```{r}
-print(one_roll())
+print(one_roll(1))
 ```
 And again:
 ```{r}
-print(one_roll())
+print(one_roll(1))
 ```
 And you can execute this a few more times to see how it behaves.
 ```{r}
-sapply(1:10,function(z) one_roll())
+one_roll(1:10)
 ```
 This gives us a good idea of how we should proceed for our next phase: repeat the experiment many times and record the data.
 ```{r}
-data <- sapply(1:number_of_experiments,
-               function(z) one_roll())
+data <- one_roll(1:number_of_experiments)
 ```
 At this point we need to compute the number of 7's we see in the data.
 ```{r}
@@ -417,15 +509,15 @@ Symbolically, we have 6 "7"'s out of 36 outcomes, i.e.
 ```{r}
 6/36
 ```
-So our estimate is certainly good enough for government work.  If we need to how can we improve our estimate?  Let's take a look at how the estimate improves as the number of experiments increases.  We'll need  function that runs these experiments.
+So our estimate is certainly good enough for government work.  If we need to how can we improve our estimate?  
+
+Let's take a look at how the estimate improves as the number of experiments increases.  We'll need a function that runs these experiments.
 ```{r}
-run_experiments <- function(number_of_experiments) {
-  data <- sapply(1:number_of_experiments,
-                 function(z) one_roll())
+run_experiments <- Vectorize(function(number_of_experiments) {
+  data <- one_roll(1:number_of_experiments)
   number_of_7 <- length(which(data==7))
   return(number_of_7/number_of_experiments)
-}
-run_experiments <- Vectorize(run_experiments)
+})
 ```
 Now let's run different numbers of experiments and see how good our estimate is.
 ```{r}
@@ -462,13 +554,13 @@ Let's now write a function to perform one trip and then repeat that.
 ```{r}
 set.seed(42)
 number_of_trips <- 10000
-one_trip <- function() {
+one_trip <- Vectorize(function(x=1) {
   coin_flips <- sample(c(-1,1),100,replace=TRUE)
   extra_steps <- 2*coin_flips
   location <- cumsum(1+extra_steps)
   return(tail(location,1))
-}
-data <- sapply(1:number_of_trips,function(z) one_trip())
+})
+data <- one_trip(1:number_of_trips)
 ```
 Let's examine the data.
 ```{r}
@@ -498,17 +590,16 @@ wait_time <- 15
 ```
 Define functions to perform one repetition of this experiment.
 ```{r}
-one_rep <- function() {
+one_rep <- Vectorize(function(x=1) {
   arrival_time <- runif(2,min=0,max=60)  # generate two arrival times
   abs(arrival_time[1]-arrival_time[2])<=15
-}
+})
 ```
 How can we test the one_rep function?  Try it!
 
 Now repeat the experiment many times and record the data.
 ```{r}
-data <- sapply(1:number_of_experiments,
-       function(z) one_rep())
+data <- one_rep(1:number_of_experiments)
 ```
 Finally we can analyze the data and compute the probability of interest.
 ```{r}
@@ -521,18 +612,17 @@ number_of_experiments <- 100000
 ```
 Define functions to perform one repetition of this experiment.
 ```{r}
-one_rep <- function() {
+one_rep <- Vectorize(function(x=1) {
   arrival_time <- runif(2,min=0,max=60)  # generate two arrival times
   wait_time <- runif(1,min=0,max=20)  # generate one wait time
   abs(arrival_time[1]-arrival_time[2])<=wait_time
-}
+})
 ```
 How can we test the one_rep function?
 
 Now repeat the experiment many times and record the data.
 ```{r}
-data <- sapply(1:number_of_experiments,
-       function(z) one_rep())
+data <- one_rep(1:number_of_experiments)
 ```
 Finally we can analyze the data and compute the probability of interest.
 ```{r}
@@ -662,13 +752,13 @@ lines(x,y,col='blue',lwd=3)
 ```
 Not a terrible approximation!  The mean is our point estimate of the waiting time.  So we would say that on average, we expect about `r mu` minutes to elapse between geyser eruptions.
 
-So now, how can we use this density to construct an interval estimate of the mean waiting time?  It's important to understand that our plot above is *not* the distribution of the mean waiting time random variable.  To generate that distribution we first need to run an experiment in which we draw samples and compute means.  
+It's important to understand that our plot above is *not* the distribution of the mean waiting time random variable.  To generate *that* distribution we first need to run an experiment in which we draw samples and compute means.  
 ```{r}
 sample_size <- length(X)
-one_mean <- function() {
+one_mean <- Vectorize(function(x=1) {
   return(mean(sample(X,sample_size,replace=TRUE)))
-}
-sample_means <- sapply(1:1000,function(z) one_mean())
+})
+sample_means <- one_mean(1:sample_size)
 meanmu <- mean(sample_means)
 meansigma <- sd(sample_means)
 xmean <- seq(from=78,to=83,by=0.01)
@@ -684,12 +774,30 @@ At this point we need to decide on a confidence level; let's take 90%.  So we wa
 interval90 <- qnorm(c(.05,.95),mean=meanmu,sd=meansigma)
 interval90
 ```
+We can visualize our confidence interval as
+```{r}
+hist(X,breaks=30,freq=FALSE)
+x <- seq(from=69,to=100,by=0.5)
+y <- dnorm(x,mean=mu,sd=sigma)
+lines(x,y,col='blue',lwd=3)
+abline(v=interval90[1],col='red',lwd=3)
+abline(v=interval90[2],col='red',lwd=3)
+```
 If we then wish to change our confidence, we can do so easily.  For example, we can construct a 95% confidence interval by trimming off 2.5% of the data at the left and right.
 ```{r}
 interval95 <- qnorm(c(.025,.975),mean=meanmu,sd=meansigma)
 interval95
 ```
-Note that the 95% confidence interval is wider than the 90% confidence interval.  To be more confident that the parameter value falls in our constructed interval, we need to construct a wider interval.
+Note that the 95% confidence interval is a little wider than the 90% confidence interval.  
+```{r}
+hist(X,breaks=30,freq=FALSE)
+x <- seq(from=69,to=100,by=0.5)
+y <- dnorm(x,mean=mu,sd=sigma)
+lines(x,y,col='blue',lwd=3)
+abline(v=interval95[1],col='red',lwd=3)
+abline(v=interval95[2],col='red',lwd=3)
+```
+To be more confident that the parameter value falls in our constructed interval, we need to construct a wider interval.
 
 ### Example
 Now let's examine the Old Faithful data set again, this time focusing on the eruptions variable.
@@ -802,7 +910,7 @@ This problem is based on an infamous paper [10] by Donald Knuth about toilet pap
 
 3. Capture $S_2$ of the species and count the number in this sample that have already been marked, $M$.
 
-4. With certain assumptions in place, we reason that the proportion of marked individuals in the sample is the same as the proportion of marked individuals in the population:$$\frac{M}{S_2}=\frac{S_1}{N}$$Solving for $N$ gives$$\hat{N}=\frac{S_1S_2}{M}$$(We write $\hat{N}$ to denote that this is an estimate and not the true value.)
+4. With certain assumptions in place, we reason that the proportion of marked individuals in the sample is the same as the proportion of marked individuals in the population:$$\text{Proportion marked in sample 2}=\frac{M}{S_2}=\frac{S_1}{N}=\text{proportion marked in population}$$Solving for $N$ gives$$\hat{N}=\frac{S_1S_2}{M}$$(We write $\hat{N}$ to denote that this is an estimate and not the true value.)
 
 (a) Suppose that the population size is actually $N_{actual}=1000$.  Suppose that our sample sizes are $S_1=S_2=50$, and assume that all animals are equally likely to be captured during each sampling.  Use a simulation to find the expected value and variance for $\hat{N}$.  Is the expected value what you would expect it (or want it) to be?
 
@@ -861,7 +969,7 @@ Here is some information about the "built-in" distributions in R: https://stat.e
 *************
 
 ## The Monte Carlo Method
-The Monte Carlo method is really not a method, but an entire class of computational algorithms that focus on answering questions through simulation.  Read more here: https://en.wikipedia.org/wiki/Monte_Carlo_method .  (As a point of interest, I was supported by Stan Ulam's seminar and scholarship as a graduate student.)  References [3] and [4] contain some excellent material discussing Monte Carlo methods.  Reference [4] contains code and exercises written in Matlab; Python users using the numpy and pylab packages will find this easily readable.  [5] is a more advanced mathematical text, aimed at clarifying the connections between Monte Carlo methods and the Bayesian approach to statistical analysis.  [6] moves in the computational direction instead, clarifying the connections between Monte Carlo methods and the Bayesian approach using Python and the pymc3 package.
+The Monte Carlo method is really not a method, but an entire class of computational algorithms that focus on answering questions through simulation.  Read more here: https://en.wikipedia.org/wiki/Monte_Carlo_method .  References [3] and [4] contain some excellent material discussing Monte Carlo methods.  Reference [4] contains code and exercises written in Matlab; Python users using the numpy and pylab packages will find this easily readable.  [5] is a more advanced mathematical text, aimed at clarifying the connections between Monte Carlo methods and the Bayesian approach to statistical analysis.  [6] moves in the computational direction instead, clarifying the connections between Monte Carlo methods and the Bayesian approach using Python and the pymc3 package.
 
 In the simulation section of these notes we have seen examples of estimating probabilities through simulation and optimizing functions through simulation.  However, we have not really seen simulations used to generate samples from distributions of continuous random variables.  How do computer programs work "under the hood"?  How does R generate 10000 draws from a beta distribution?  We'll tackle this in the next two sections.
 
@@ -880,6 +988,8 @@ Then we can build a box with 100 tickets, 10 of which are 0's, 30 of which are 1
 ```{r}
 box <- c(rep(0,10),rep(1,30),rep(2,50),rep(3,10))
 ```
+Note that the proportion of the each outcome's tickets in the box is the same as the proportions of that outcome in the probability mass table.
+
 To draw a sample from the box of a given size (with or without replacement), we can use the sample function.
 ```{r}
 data <- sample(box,500,replace=TRUE)
@@ -962,11 +1072,11 @@ head(spots)
 ```
 This is just the number of sunspots recorded each year, in order from 1700 to 1988.  Let's first find the mass function.
 ```{r}
-countem <- function(data,x) {
-  sum(data==x)
-}
+countem <- Vectorize(function(x) {
+  sum(spots==x)
+})
 X <- 0:max(spots)
-temp <- sapply(X,function(z) countem(spots,z))
+temp <- countem(X)
 f <- temp/sum(temp)
 barplot(f)
 ```
@@ -979,11 +1089,11 @@ And now that we have the distribution function we can perform inversion sampling
 ```{r}
 set.seed(42)
 y <- runif(1000)
-find_X <- function(y) {
+find_X <- Vectorize(function(y) {
   location <- which.min(abs(Y-y))
   return(X[location])
-}
-draws <- sapply(y,find_X)
+})
+draws <- find_X(y)
 hist(draws,breaks=60)
 ```
 This looks similar to our original distribution of sunspots, so it seems good.
@@ -1011,15 +1121,14 @@ Nile_density <- density(Nile)
 We need to create an approximating function and then create the vectors of inputs and outputs for inversion sampling.  We have to be a bit careful here, because we want our density function to be 0 outside of a certain range; thus the definition of $f$ in the code below.
 ```{r}
 Nile_approx <- approxfun(Nile_density)
-f <- function(x){
+f <- Vectorize(function(x){
   if (x<min(Nile) | x>max(Nile)) {
     r <- 0
   } else {
     r <- Nile_approx(x)
   }
   return(r)
-}
-f <- Vectorize(f)
+})
 X <- min(Nile):max(Nile)
 Y <- sapply(X,function(z) integrate(f,lower=-Inf,upper=z,stop.on.error = FALSE)$value)
 hist(Nile,freq=FALSE)
@@ -1033,11 +1142,10 @@ We can now sample from this distribution function using inversion sampling.
 ```{r}
 set.seed(42)
 y <- runif(1000)
-find_X <- function(y) {
+find_X <- Vectorize(function(y) {
   location <- which.min(abs(Y-y))
   return(X[location])
-}
-find_X <- Vectorize(find_X)
+})
 draws <- find_X(y)
 hist(draws,breaks=60)
 ```
@@ -1106,20 +1214,25 @@ There are a number of ways to improve a rejection sampling scheme.  Chapter 2 in
 **Exercise 3.4** Use rejection sampling to draw a sample of size 1000 from the random variable with density function$$f(x)=\left\{\begin{array}{cc} \frac{3}{8}x^2 & 0\leq x\leq 2\\ 0 & \text{otherwise}\end{array}\right. $$
 
 # 4. An Application to Data Modeling
-In this section we present a longer example applying the ideas in sections 1 through 3.  One common problem we face is to find a probability distribution that best models some given data set.  Why do we want to do this?  Probability distributions have different features, and finding that our data set is very similar to a certain distribution can help us understand the processes that generated the data and make better predictions about future samples drawn from the same population.
+In this section we present a longer example applying the ideas in sections 1 through 3.  One common problem we face is finding a probability distribution that best models some given data set.  Why do we want to do this?  Probability distributions have different features, and finding that our data set is similar to a certain distribution can help us understand the processes that generated the data and make better predictions about future samples drawn from the same population.
 
-So, given some univariate (one variable) data set, our goal is to find a distribution that is a good model for our data.  We need some ingredients:
+So, given some univariate (one variable) data set, our goal is to find a distribution that is a good model for our data, or at least better than other models we have proposed so far.  We need some ingredients:
 * Candidate distributions: What distributions seem to be good models for the data?  Ideally a good model is one that fits the data reasonably well and one that we understand well.
 * Metric for assessing the "goodness" of the model.  A metric, in mathematical terms, is a function taking two inputs and returning two outputs which behaves like a distance function.  So we are really looking for some way of measuring distance between our data and our candidate models.  The model that is closest to the data is our best fit.
 * Procedure for applying the metric.
 
-## Our first example data set
+*******
+
+## The example data set
 For our first example we consider the .
 ```{r}
 wage <- read.csv("wage.csv")
 wage <- wage$wage
 ```
 This data set is univariate with `r length(wage)` entries.  
+
+
+**************
 
 ## Obtaining candidate distributions
 Finding candidate distributions involves a combination of background knowledge, persistence, consultation of journal articles and experts, and luck.  It's worth noting that there are still ongoing debates about the best models for certain famous data sets, like the distribution of numbers of friends users have on Facebook.
@@ -1134,9 +1247,13 @@ wage <- wage[wage<240]
 hist(wage,breaks=30)
 ```
 
+
+***********
+
 ## Our metrics for goodness-of-fit
-In this example we'll use the Kolmogorov-Smirnov (KS) test as one metric.  The KS test takes as inputs two sets of data and produces a probability measureing how likely it is that the two samples came from the same distribution.  As an example, let's draw sample from the same exponential distribution.
+One metric for evaluating the goodness-of-fit of a proposed distribution to data is the Kolmogorov-Smirnov (KS) test.  The KS test takes as inputs two sets of data and produces a probability measuring how likely it is that the two samples came from the same distribution.  As an example, let's draw samples from the same exponential distribution.
 ```{r}
+set.seed(42)
 sample_size <- 200
 rate <- 2
 X <- rexp(sample_size,rate = rate)
@@ -1145,6 +1262,7 @@ ks.test(X,Y)
 ```
 Here, the p-value is relatively high, so our conclusion is that it is reasonably likely that the sample were drawn from the same distribution; seems like a good conclusion to make, since they were!  As a second example, let's draw sample from exponential distributions with different rates.
 ```{r}
+set.seed(42)
 sample_size <- 200
 X <- rexp(sample_size,rate = 2)
 Y <- rexp(sample_size,rate = 3)
@@ -1152,9 +1270,31 @@ ks.test(X,Y)
 ```
 Here, we see a very low p-value and so we conclude that it is very unlikely that the samples were drawn from the same distribution; again, great conclusion since they were not!
 
-Unfortunately, the KS test can be highly sensitive to differences in distributions which may not make much difference in practical modeling.  So additionally, we will look at plots comparing the histograms of the data and the candidate sample, and a qq-plot comparing the two.
+Unfortunately, the KS test can be highly sensitive to differences in distributions which may not make much difference in practical modeling, and which may arise simply from random chance in sampling.  As an example, consider a normal distribution and a t distribution with the same mean and variance.  We draw two samples of size 500, use the KS test, and then repeat this experiment 500 times.
+```{r}
+set.seed(42)
+sample_size <- 500
+run_experiment <- Vectorize(function(x=1) {  
+  X <- rnorm(sample_size)
+  Y <- rnorm(sample_size)
+  ks.test(X,Y)$p.value
+})
+data <- run_experiment(1:1000)
+hist(data,breaks=30,col='red',
+     xlim=c(0,1))
+```
+It looks like we produce p-values all over the interval!  What percent of them are "mistakes"?  We usually use a boundary of p=0.10, with p-values lower indicating that the distributions are different.  In our experiment,
+```{r}
+length(which(data<0.1))/length(data)
+```
+we have a little more than 9% errors.  This is not great performance.
+
+So additionally, we will look at plots comparing the histograms of the data and the candidate sample, and a qq-plot comparing the two.  We will also fit a regression line to the qq-plot and measure the $R^2$ value as a metric for goodness-of-fit.
 
 \newpage
+
+***********
+
 ## Procedure for applying the metric
 We proceed as follows:
 1. Propose a distribution or family of distributions.
@@ -1162,9 +1302,9 @@ We proceed as follows:
 3. Draw a sample from the candidate distribution, whose size equals the size of the original data set.
 4. Perform the KS test.
 5. If our p-value is greater than 0.1, we will consider it reasonable that the data could have come from the candidate distribution, and if less than 0.1, then it is not reasonable.
-6. As noted above, we may have to take a "good enough for government work" view of our model fit.  To visualize how well the candidate distribution matches the data, we provide a function to plot the histograms overlaying one another and the qq-plot.
+6. As noted above, we may have to take a "good enough for government work" view of our model fit.  To visualize how well the candidate distribution matches the data, we provide a function to plot the histograms overlaying one another and the qq-plot, *twoplot*.  We also provide a function that returns the $R^2$ value from the regression of the qq-plot of the samples, *rsquared*.
 
-```{r}
+```{r,echo=FALSE}
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   library(grid)
 
@@ -1200,8 +1340,6 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
     }
   }
 }
-```
-```{r}
 plot_two <- function(X,Y) {
   require(ggplot2)
   require(dplyr)
@@ -1215,11 +1353,49 @@ plot_two <- function(X,Y) {
   df <- bind_cols(df1,df2)
   p2 <- ggplot(data=df,aes(x=x,y=y)) + 
     geom_point() +
-    geom_abline(slope=1,intercept=0,colour="red")
+    geom_smooth(method='lm',color='red') + 
     labs(x=deparse(substitute(X)),y=deparse(substitute(Y)))
   multiplot(p1,p2,cols=2)
 }
+rsquared <- function(X,Y) {
+  x=quantile(X,probs=seq(from=0,to=1,by=0.02))
+  y=quantile(Y,probs=seq(from=0,to=1,by=0.02))
+  return(summary(lm(y~x))$r.squared)
+}
 ```
+
+How much variation do we get in the $R^2$ measurement?  Let's run the same experiment we did for the KS metric.
+```{r}
+set.seed(42)
+sample_size <- 500
+run_experiment <- Vectorize(function(x=1) {  
+  X <- rnorm(sample_size)
+  Y <- rnorm(sample_size)
+  rsquared(X,Y)
+})
+data <- run_experiment(1:1000)
+hist(data,breaks=30,col='red',
+     xlim=c(0,1))
+```
+Here, we see very tight clustering near 1, and so we feel that this is a more stable measurement.
+
+Let's try this for distributions that are not similar.
+How much variation do we get in the $R^2$ measurement?  Let's run the same experiment we did for the KS metric.
+```{r}
+set.seed(42)
+sample_size <- 500
+run_experiment <- Vectorize(function(x=1) {  
+  X <- rnorm(sample_size)
+  Y <- rexp(sample_size,rate=0.2)
+  rsquared(X,Y)
+})
+data <- run_experiment(1:1000)
+hist(data,breaks=30,col='red',
+     xlim=c(0,1))
+```
+Here we see our data clustered much lower.  So for the same or similar distributions we'll expect to see $R^2$ measurements in the mid to high 90%'s.
+
+***********
 
 ## Candidate: Normal distribution
 We'll propose a normal distribution.  Let's estimate the parameters.
@@ -1227,19 +1403,27 @@ We'll propose a normal distribution.  Let's estimate the parameters.
 mu <- mean(wage)
 sigma <- sd(wage)
 ```
-
+Next we draw our sample from the candidate distribution.
 ```{r}
 sample_size <- length(wage)
 candidate <- rnorm(sample_size,mean=mu,sd=sigma)
 ```
-
+At this point we want to compare our data to our sample.  Using the KS metric, we have
 ```{r}
 ks.test(wage,candidate)
 ```
-
+and thus we might want to conclude that the distributions are different.  But let's look at the plots before we jump to any conclusions.
 ```{r}
 plot_two(wage,candidate)
 ```
+The histograms may be similar enough for our application, and the qq-plot is quite reasonable.  Our $R^2$ metric is
+```{r}
+rsquared(wage,candidate)
+```
+The $R^2$ value is quite high indicating a very good fit.  Thus we may want to accept this distribution.  Let's look at some other candidates.
+
+
+*********
 
 ## Candidate: Beta distribution
 Next, we propose a beta distribution.
@@ -1258,8 +1442,15 @@ ks.test(X,candidate)
 plot_two(X,candidate)
 ```
 
+```{r}
+rsquared(X,candidate)
+```
+
+
+**********
+
 ## Candidate: Student t distribution
-Next, we propose a gamma distribution.
+Next, we propose a Student t distribution.
 ```{r}
 X <- wage
 mu <- mean(X)
@@ -1273,6 +1464,12 @@ ks.test(X,candidate)
 ```{r}
 plot_two(X,candidate)
 ```
+
+```{r}
+rsquared(X,candidate)
+```
+
+**********
 
 ## Candidate: Lognormal distribution
 Next, we propose a lognormal distribution.
@@ -1290,9 +1487,51 @@ ks.test(X,candidate)
 ```
 
 ```{r}
-plot_two(exp(candidate),wage)
+plot_two(X,candidate)
 ```
 
+```{r}
+rsquared(X,candidate)
+```
+
+
+********
+
+## Candidate: Exponential distribution
+Next, we propose an exponential distribution.  We expect this to be a poor fit.
+
+```{r}
+sample_size <- length(wage)
+candidate <- rexp(sample_size,rate=1/mean(wage))
+ks.test(wage,candidate)
+```
+
+```{r}
+plot_two(wage,candidate)
+```
+
+```{r}
+rsquared(wage,candidate)
+```
+
+We have a histogram that is visually inappropriate and a $R^2$ value that is remarkably lower than the scores for our other candidates.
+
+
+
+*********
+
+## Conclusions?
+We found several distributions that seem reasonable models and we proposed one that does not.  We can see, comparing the KS test values, that the KS metric tends to reject proposed models often and does not distinguish well among them.  Our graphical tests together with the $R^2$ value for the qq-plot tend to reject proposed models that are obviously incorrect, but may have some problems distinguishing the best model among a group of acceptable models.
+
+For this problem, the Beta distribution seems to perform best.  The Student t distribution performs nearly as well, and may be preferable as a model because of its familiarity from the introductory statistics course.
+
+For more to read along these lines, [15] examines the difficulties of fitting power law models to given data sets and then asks whether the power law models are good for each data set.  This is a classic paper, and presents a challenging but rewarding read.
+
+Resource [16] is helpful in selecting models to propose for distributions, or just for getting more familiar with univariate distributions.
+
+[14] is a detailed and technical look at the evolution of computational statistics over the past half century
+
+\newpage
 # References
 
 [1] Ross.  **A First Course in Probability: Fifth Edition**.  Prentice-Hall, 1998.
@@ -1324,3 +1563,5 @@ plot_two(exp(candidate),wage)
 [14] Efron, Hastie.  **Computer Age Statistical Inference: Algorithms, Evidence, and Data Science**.  Cambridge University Press, 2016.
 
 [15] Clauset, Shalizi, Newman.  *Power-Law Distributions in Empirical Data*.  SIAM Review, vol. 51, no. 4 (December 2009), pp 661-703.
+
+[16] Leemis.  *Univariate Distribution Relationships*.  Available online at [http://www.math.wm.edu/~leemis/chart/UDR/UDR.html](http://www.math.wm.edu/~leemis/chart/UDR/UDR.html) .

@@ -1,0 +1,8 @@
+"0","set.seed(42)"
+"0","y <- runif(1000)"
+"0","find_X <- Vectorize(function(y) {"
+"0","  location <- which.min(abs(Y-y))"
+"0","  return(X[location])"
+"0","})"
+"0","draws <- find_X(y)"
+"0","hist(draws,breaks=60)"

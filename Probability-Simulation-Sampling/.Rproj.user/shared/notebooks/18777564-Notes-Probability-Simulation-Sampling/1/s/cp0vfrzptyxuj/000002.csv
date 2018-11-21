@@ -1,0 +1,7 @@
+"0","interval90 <- qnorm(c(.05,.95),mean=meanmu,sd=meansigma)"
+"0","interval90"
+"1","[1]"
+"1"," 79.62562"
+"1"," 81.09303"
+"1","
+"

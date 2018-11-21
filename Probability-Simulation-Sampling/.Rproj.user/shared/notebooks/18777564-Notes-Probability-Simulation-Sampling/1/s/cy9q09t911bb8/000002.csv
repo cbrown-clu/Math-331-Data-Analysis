@@ -1,2 +1,0 @@
-"0","sample_size <- length(wage)"
-"0","candidate <- rnorm(sample_size,mean=mu,sd=sigma)"
