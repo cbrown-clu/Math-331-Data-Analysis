@@ -1,3 +1,0 @@
-"0","x <- seq(from=69,to=100,by=0.5)"
-"0","y <- dnorm(x,mean=mu,sd=sigma)"
-"0","lines(x,y,col='blue',lwd=3)"

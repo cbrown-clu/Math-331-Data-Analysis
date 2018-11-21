@@ -1,7 +1,0 @@
-"0","run_experiments <- function(number_of_experiments) {"
-"0","  data <- sapply(1:number_of_experiments,"
-"0","                 function(z) one_roll())"
-"0","  number_of_7 <- length(which(data==7))"
-"0","  return(number_of_7/number_of_experiments)"
-"0","}"
-"0","run_experiments <- Vectorize(run_experiments)"

@@ -1,4 +1,0 @@
-"0","X <- 100*(1:200)"
-"0","estimates <- run_experiments(X)"
-"0","Y <- abs(estimates-6/36)"
-"0","plot(X,Y)"

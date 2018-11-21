@@ -1,7 +1,0 @@
-"0","interval <- qnorm(c(.025,.975),mean=meanmu,sd=meansigma)"
-"0","interval"
-"1","[1]"
-"1"," 3.355151"
-"1"," 3.625843"
-"1","
-"
