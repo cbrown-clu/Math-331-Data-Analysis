@@ -1113,29 +1113,29 @@ So, given some univariate (one variable) data set, our goal is to find a distrib
 * Metric for assessing the "goodness" of the model.  A metric, in mathematical terms, is a function taking two inputs and returning two outputs which behaves like a distance function.  So we are really looking for some way of measuring distance between our data and our candidate models.  The model that is closest to the data is our best fit.
 * Procedure for applying the metric.
 
-## Our example data set
-For our example we consider the magnitudes of recorded seismic events recorded in Ventura County over the last 85ish years.
+## Our first example data set
+For our first example we consider the .
 ```{r}
-quakes <- read.csv("Quakes.csv")
-mags <- quakes$Magnitude
-rm(quakes)
+wage <- read.csv("wage.csv")
+wage <- wage$wage
 ```
-This data set is univariate with `r length(mags)` entries.  
+This data set is univariate with `r length(wage)` entries.  
 
 ## Obtaining candidate distributions
 Finding candidate distributions involves a combination of background knowledge, persistence, consultation of journal articles and experts, and luck.  It's worth noting that there are still ongoing debates about the best models for certain famous data sets, like the distribution of numbers of friends users have on Facebook.
 
 But the starting point for identifying candidate distributions is usually the same: make lots of graphs!  We begin with a histogram of the data.
 ```{r}
-hist(mags,breaks=30)
+hist(wage,breaks=30)
 ```
-It's difficult to see what the distribution may be.  We can see that the magnitudes seem to be inflated near zero, so we may want to deal only with magnitudes exceeding a certain value, e.g. 0.5.  
-This gives us a few working hypotheses about the distribution:
-* Gamma?
-* Other?
+The histogram tells us that we may be dealing with two distributions mixed together.  Let's select only the lower distribution to work with for now.
+```{r}
+wage <- wage[wage<240]
+hist(wage,breaks=30)
+```
 
-## Our metric for goodness-of-fit
-In this example we'll use the Kolmogorov-Smirnov (KS) test.  The KS test takes as inputs two sets of data and produces a probability measureing how likely it is that the two samples came from the same distribution.  As an example, let's draw sample from the same exponential distribution.
+## Our metrics for goodness-of-fit
+In this example we'll use the Kolmogorov-Smirnov (KS) test as one metric.  The KS test takes as inputs two sets of data and produces a probability measureing how likely it is that the two samples came from the same distribution.  As an example, let's draw sample from the same exponential distribution.
 ```{r}
 sample_size <- 200
 rate <- 2
@@ -1152,6 +1152,8 @@ ks.test(X,Y)
 ```
 Here, we see a very low p-value and so we conclude that it is very unlikely that the samples were drawn from the same distribution; again, great conclusion since they were not!
 
+Unfortunately, the KS test can be highly sensitive to differences in distributions which may not make much difference in practical modeling.  So additionally, we will look at plots comparing the histograms of the data and the candidate sample, and a qq-plot comparing the two.
+
 \newpage
 ## Procedure for applying the metric
 We proceed as follows:
@@ -1160,21 +1162,135 @@ We proceed as follows:
 3. Draw a sample from the candidate distribution, whose size equals the size of the original data set.
 4. Perform the KS test.
 5. If our p-value is greater than 0.1, we will consider it reasonable that the data could have come from the candidate distribution, and if less than 0.1, then it is not reasonable.
-## Candidate: Gamma distribution
+6. As noted above, we may have to take a "good enough for government work" view of our model fit.  To visualize how well the candidate distribution matches the data, we provide a function to plot the histograms overlaying one another and the qq-plot.
 
 ```{r}
-runks <- Vectorize(function(cutoff) {
-  X <- mags[mags>cutoff]-cutoff
-  mu <- mean(X)
-  v <- var(X)
-  scale <- v/mu
-  shape <- mu^2/v
-  candidate <- rgamma(length(X),scale=scale,shape=shape)
-  ks.test(X,candidate)$p.value
-})
-cutoff <- seq(from=0.4,to=0.8,by=0.001)
-y <- runks(cutoff)
-plot(cutoff,y)
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+```
+```{r}
+plot_two <- function(X,Y) {
+  require(ggplot2)
+  require(dplyr)
+  df1 <- data.frame(values=X,from=deparse(substitute(X)))
+  df2 <- data.frame(values=Y,from=deparse(substitute(Y)))
+  df <- bind_rows(df1,df2)
+  p1 <- ggplot(data=df,aes(x=values,fill=from)) + 
+    geom_histogram(alpha=0.5,aes(y = ..density..), position = 'identity')
+  df1 <- data.frame(x=quantile(X,probs=seq(from=0,to=1,by=0.02)))
+  df2 <- data.frame(y=quantile(Y,probs=seq(from=0,to=1,by=0.02)))
+  df <- bind_cols(df1,df2)
+  p2 <- ggplot(data=df,aes(x=x,y=y)) + 
+    geom_point() +
+    geom_abline(slope=1,intercept=0,colour="red")
+    labs(x=deparse(substitute(X)),y=deparse(substitute(Y)))
+  multiplot(p1,p2,cols=2)
+}
+```
+
+## Candidate: Normal distribution
+We'll propose a normal distribution.  Let's estimate the parameters.
+```{r}
+mu <- mean(wage)
+sigma <- sd(wage)
+```
+
+```{r}
+sample_size <- length(wage)
+candidate <- rnorm(sample_size,mean=mu,sd=sigma)
+```
+
+```{r}
+ks.test(wage,candidate)
+```
+
+```{r}
+plot_two(wage,candidate)
+```
+
+## Candidate: Beta distribution
+Next, we propose a beta distribution.
+```{r}
+X <- (wage-min(wage))/(max(wage)-min(wage))
+mu <- mean(X)
+va <- var(X)
+sample_size <- length(X)
+alpha <- mu*(mu*(1-mu)/va-1)
+beta <- (1-mu)*(mu*(1-mu)/va-1)
+candidate <- rbeta(sample_size,shape1=alpha,shape2=beta)
+ks.test(X,candidate)
+```
+
+```{r}
+plot_two(X,candidate)
+```
+
+## Candidate: Student t distribution
+Next, we propose a gamma distribution.
+```{r}
+X <- wage
+mu <- mean(X)
+va <- var(X)
+X <- (X-mu)/sqrt(va)
+sample_size <- length(X)
+candidate <- rt(sample_size,df=sample_size-1)
+ks.test(X,candidate)
+```
+
+```{r}
+plot_two(X,candidate)
+```
+
+## Candidate: Lognormal distribution
+Next, we propose a lognormal distribution.
+```{r}
+hist(log(wage),breaks=60)
+```
+
+```{r}
+X <- log(wage)
+mu <- mean(X)
+sigma <- sd(X)
+sample_size <- length(X)
+candidate <- rnorm(sample_size,mean=mu,sd=sigma)
+ks.test(X,candidate)
+```
+
+```{r}
+plot_two(exp(candidate),wage)
 ```
 
 # References
