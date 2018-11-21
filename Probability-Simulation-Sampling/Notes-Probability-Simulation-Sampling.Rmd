@@ -1114,31 +1114,24 @@ So, given some univariate (one variable) data set, our goal is to find a distrib
 * Procedure for applying the metric.
 
 ## Our example data set
-For our example we consider the interarrival times (in hours) of seismic events with magnitude greater than 2 recorded in Ventura County over the last 85ish years.
+For our example we consider the magnitudes of recorded seismic events recorded in Ventura County over the last 85ish years.
 ```{r}
 quakes <- read.csv("Quakes.csv")
-quakes2 <- quakes[quakes$Magnitude>2,]
-interarrival <- quakes2$TimelineHours[2:nrow(quakes2)] - 
-  quakes2$TimelineHours[1:(nrow(quakes2)-1)]
-rm(quakes,quakes2)
+mags <- quakes$Magnitude
+rm(quakes)
 ```
-This data set is univariate with `r length(interarrival)` entries.  
+This data set is univariate with `r length(mags)` entries.  
 
 ## Obtaining candidate distributions
 Finding candidate distributions involves a combination of background knowledge, persistence, consultation of journal articles and experts, and luck.  It's worth noting that there are still ongoing debates about the best models for certain famous data sets, like the distribution of numbers of friends users have on Facebook.
 
 But the starting point for identifying candidate distributions is usually the same: make lots of graphs!  We begin with a histogram of the data.
 ```{r}
-hist(interarrival,breaks=60)
+hist(mags,breaks=30)
 ```
-It's difficult to see what the distribution may be.  A common trick for distributions that "look" exponential is to examine the histogram of the log of the data.
-```{r}
-hist(log(interarrival),breaks=60)
-```
-The original data and the log of the data both look roughly exponentially distributed.  This gives us a few working hypotheses about the distribution:
-* Exponential?
-* Power law?
-* Some sort of modified exponential?
+It's difficult to see what the distribution may be.  We can see that the magnitudes seem to be inflated near zero, so we may want to deal only with magnitudes exceeding a certain value, e.g. 0.5.  
+This gives us a few working hypotheses about the distribution:
+* Gamma?
 * Other?
 
 ## Our metric for goodness-of-fit
@@ -1167,60 +1160,22 @@ We proceed as follows:
 3. Draw a sample from the candidate distribution, whose size equals the size of the original data set.
 4. Perform the KS test.
 5. If our p-value is greater than 0.1, we will consider it reasonable that the data could have come from the candidate distribution, and if less than 0.1, then it is not reasonable.
-## Candidate: Exponential distribution
-We now propose the exponential distribution.  Let's estimate the rate parameter $\lambda$.  The MLE for $\lambda$ is the inverse of the sample mean.
-```{r}
-lambda <- 1/mean(interarrival)
-```
-This gives a $\lambda$ value of `r lambda`.  Next we draw a sample from our candidate:
-```{r}
-sample_size <- length(interarrival)
-candidate <- rexp(sample_size,rate=lambda)
-```
-Performing the KS test gives
-```{r}
-ks.test(interarrival,candidate)
-```
-Because the p-value is very low, we conclude that the data is not distributed as an exponential.  So we move on to our next candidate!
-## Candidate: Log Exponential
-We also wondered whether the log of the data is exponentially distributed.  Let's first remove the zeros and compute the log:
-```{r}
-X <- log(interarrival[interarrival>0])
-```
-Now let's compute our MLE for $\lambda$ and draw our candidate sample.
-```{r}
-lambda <- 1/mean(X)
-candidate <- rexp(length(X),rate=lambda)
-ks.test(X,candidate)
-```
-Again, we have a very low p-value and so we conclude that the log of the data is not exponentially distributed.
-## Candidate: Power law
-In this section we propose a power law as our possible distribution.  Power laws are a family of "heavy-tailed" distributions which provide some interesting computational challenges; details can be found in [15].
+## Candidate: Gamma distribution
 
-While we could use the **poweRlaw** package in R for this section, we'll instead explicitly use code introduced in sections 2 and 3.
-We'll model only the positive data.
 ```{r}
-X <- interarrival[interarrival>0]
-hist(X)
-```
-We begin with our MLEs for the two parameters of the power law distribution, xmin and $\alpha$.  However, as noted in [15], the estimation of xmin is tricky, and may in many cases be best accomplished by choosing it to give the best fit using KS.  But, don't we need xmin to draw a candidate sample before applying KS?  Well, yes.  Here's how we get around that.
-```{r}
-sample_size <- length(X)
-xmin <- seq(from=1,to=5000,by=10)
-draw_sample <- Vectorize(function(xmin) {
-  alpha <- 1+1/(sum(log(X/xmin)))
-  return(xmin * (1-runif(sample_size))^(-1/(alpha-1)))
-})
-compute_KS <- Vectorize(function(xmin) {
-  candidate <- draw_sample(xmin)
+runks <- Vectorize(function(cutoff) {
+  X <- mags[mags>cutoff]-cutoff
+  mu <- mean(X)
+  v <- var(X)
+  scale <- v/mu
+  shape <- mu^2/v
+  candidate <- rgamma(length(X),scale=scale,shape=shape)
   ks.test(X,candidate)$p.value
 })
-suppressWarnings(ks_data <- compute_KS(xmin))
-max(ks_data)
+cutoff <- seq(from=0.4,to=0.8,by=0.001)
+y <- runks(cutoff)
+plot(cutoff,y)
 ```
-Sadly, the probabilities are so low here that the p-values all truncate to 0 for all values of xmin.  Thus it does not seem that a power law is an appropriate model for this data.
-
-## Candidate:
 
 # References
 

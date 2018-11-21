@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE,
                       message = FALSE)
 ```
 
-# Introduction
+# 0. Introduction
 These notes are written for the Math 331 Data Analysis With R course, and are a quick overview of three areas at the boundary between mathematics and computer science.  The goals of these notes are:
 
 * Introduce probability terminology and theory.
@@ -25,7 +25,7 @@ These notes are written for the Math 331 Data Analysis With R course, and are a 
 * Provide some practical examples for using R for simulations and sampling.
 
 \newpage
-# Probability
+# 1. Probability
 
 ## Terminology and Notation
 
@@ -249,7 +249,7 @@ Find the probability mass function for $X$.
 (g) Beta
 
 \newpage
-# Simulation
+# 2. Simulation
 When we *simulate* an experiment, we program the rules of an experiment and some initial conditions into a computer, and then we perform the experiment electronically.  Generally, simulated experiments are cheap and highly repeatable.  However, they do require us to understand the rules for the experiment very well.  So for many questions in probability, simulation can be a highly effective tool because in asking the probability question, we define the rules of the experiment!  Some questions in the natural, physical, and social sciences can be approached by simulation experiments, but care must be taken in interpreting the results.
 
 ***********
@@ -850,7 +850,7 @@ This is a very simple version of the [German tank problem](https://en.wikipedia.
 **Exercise 2.11** Use the bootstrap to give a 95% confidence interval estimate for the mean level of Lake Huron, in the LakeHuron dataset.
 
 \newpage
-# Sampling
+# 3. Sampling
 In this section we will dig a little more deeply into how random number generators for various distributions can be programmed.  This section is a little sparser, but contains links to lots of useful web content.
 
 ************
@@ -1105,9 +1105,78 @@ There are a number of ways to improve a rejection sampling scheme.  Chapter 2 in
 
 **Exercise 3.4** Use rejection sampling to draw a sample of size 1000 from the random variable with density function$$f(x)=\left\{\begin{array}{cc} \frac{3}{8}x^2 & 0\leq x\leq 2\\ 0 & \text{otherwise}\end{array}\right. $$
 
+# 4. An Application to Data Modeling
+In this section we present a longer example applying the ideas in sections 1 through 3.  One common problem we face is to find a probability distribution that best models some given data set.  Why do we want to do this?  Probability distributions have different features, and finding that our data set is very similar to a certain distribution can help us understand the processes that generated the data and make better predictions about future samples drawn from the same population.
 
+So, given some univariate (one variable) data set, our goal is to find a distribution that is a good model for our data.  We need some ingredients:
+* Candidate distributions: What distributions seem to be good models for the data?  Ideally a good model is one that fits the data reasonably well and one that we understand well.
+* Metric for assessing the "goodness" of the model.  A metric, in mathematical terms, is a function taking two inputs and returning two outputs which behaves like a distance function.  So we are really looking for some way of measuring distance between our data and our candidate models.  The model that is closest to the data is our best fit.
+* Procedure for applying the metric.
+
+## Our example data set
+For our example we consider the magnitudes of recorded seismic events recorded in Ventura County over the last 85ish years.
+```{r}
+quakes <- read.csv("Quakes.csv")
+mags <- quakes$Magnitude
+rm(quakes)
+```
+This data set is univariate with `r length(mags)` entries.  
+
+## Obtaining candidate distributions
+Finding candidate distributions involves a combination of background knowledge, persistence, consultation of journal articles and experts, and luck.  It's worth noting that there are still ongoing debates about the best models for certain famous data sets, like the distribution of numbers of friends users have on Facebook.
+
+But the starting point for identifying candidate distributions is usually the same: make lots of graphs!  We begin with a histogram of the data.
+```{r}
+hist(mags,breaks=30)
+```
+It's difficult to see what the distribution may be.  We can see that the magnitudes seem to be inflated near zero, so we may want to deal only with magnitudes exceeding a certain value, e.g. 0.5.  
+This gives us a few working hypotheses about the distribution:
+* Gamma?
+* Other?
+
+## Our metric for goodness-of-fit
+In this example we'll use the Kolmogorov-Smirnov (KS) test.  The KS test takes as inputs two sets of data and produces a probability measureing how likely it is that the two samples came from the same distribution.  As an example, let's draw sample from the same exponential distribution.
+```{r}
+sample_size <- 200
+rate <- 2
+X <- rexp(sample_size,rate = rate)
+Y <- rexp(sample_size,rate = rate)
+ks.test(X,Y)
+```
+Here, the p-value is relatively high, so our conclusion is that it is reasonably likely that the sample were drawn from the same distribution; seems like a good conclusion to make, since they were!  As a second example, let's draw sample from exponential distributions with different rates.
+```{r}
+sample_size <- 200
+X <- rexp(sample_size,rate = 2)
+Y <- rexp(sample_size,rate = 3)
+ks.test(X,Y)
+```
+Here, we see a very low p-value and so we conclude that it is very unlikely that the samples were drawn from the same distribution; again, great conclusion since they were not!
 
 \newpage
+## Procedure for applying the metric
+We proceed as follows:
+1. Propose a distribution or family of distributions.
+2. Use the maximum likelihood estimator (MLE) to estimate the parameters for the proposed distribution from our data.  Substituting these parameters into the candidate distribution then produces the best possible distribution for our data *from that family*.  This best-among-family distribution is our *candidate distribution*.
+3. Draw a sample from the candidate distribution, whose size equals the size of the original data set.
+4. Perform the KS test.
+5. If our p-value is greater than 0.1, we will consider it reasonable that the data could have come from the candidate distribution, and if less than 0.1, then it is not reasonable.
+## Candidate: Gamma distribution
+
+```{r}
+runks <- Vectorize(function(cutoff) {
+  X <- mags[mags>cutoff]-cutoff
+  mu <- mean(X)
+  v <- var(X)
+  scale <- v/mu
+  shape <- mu^2/v
+  candidate <- rgamma(length(X),scale=scale,shape=shape)
+  ks.test(X,candidate)$p.value
+})
+cutoff <- seq(from=0.4,to=0.8,by=0.001)
+y <- runks(cutoff)
+plot(cutoff,y)
+```
+
 # References
 
 [1] Ross.  **A First Course in Probability: Fifth Edition**.  Prentice-Hall, 1998.
@@ -1137,3 +1206,5 @@ There are a number of ways to improve a rejection sampling scheme.  Chapter 2 in
 [13] Efron.  *Non-parametric estimates of standard error: the jackknife, the bootstrap, and other methods*.  Biometrika, vol 68 issue 3, 1981, pages 589-599.
 
 [14] Efron, Hastie.  **Computer Age Statistical Inference: Algorithms, Evidence, and Data Science**.  Cambridge University Press, 2016.
+
+[15] Clauset, Shalizi, Newman.  *Power-Law Distributions in Empirical Data*.  SIAM Review, vol. 51, no. 4 (December 2009), pp 661-703.

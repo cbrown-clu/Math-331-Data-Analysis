@@ -1,2 +1,0 @@
-"0","sample_size <- length(interarrival)"
-"0","candidate <- rexp(sample_size,rate=lambda)"
