@@ -1131,7 +1131,9 @@ hist(mags,breaks=30)
 ```
 It's difficult to see what the distribution may be.  We can see that the magnitudes seem to be inflated near zero, so we may want to deal only with magnitudes exceeding a certain value, e.g. 0.5.  
 This gives us a few working hypotheses about the distribution:
+* Normal?
 * Gamma?
+* Chi square?
 * Other?
 
 ## Our metric for goodness-of-fit
@@ -1160,21 +1162,60 @@ We proceed as follows:
 3. Draw a sample from the candidate distribution, whose size equals the size of the original data set.
 4. Perform the KS test.
 5. If our p-value is greater than 0.1, we will consider it reasonable that the data could have come from the candidate distribution, and if less than 0.1, then it is not reasonable.
+## Candidate: Normal distribution
+
+```{r}
+library(ggplot2)
+library(dplyr)
+cutoff <- 0.5
+X <- mags[mags>cutoff]
+mu <- mean(X)
+v <- var(X)
+candidate <- rnorm(length(X),mean=mu,sd=sqrt(v))
+print(ks.test(X,candidate))
+df1 <- data.frame(value=X,from='data')
+df2 <- data.frame(value=candidate,from='candidate')
+df <- bind_rows(df1,df2)
+ggplot(data=df,aes(value,fill=from)) + 
+  geom_histogram(alpha=0.5,aes(y=..density..))
+```
+
+```{r}
+library(fitdistrplus)
+X <- mags[mags>0.5]
+plotdist(X,hist=TRUE,demp=TRUE)
+descdist(X,boot=1000)
+```
+```{r}
+fn <- fitdist(X,'norm')
+print(summary(fn))
+plot(fn)
+```
+
 ## Candidate: Gamma distribution
 
 ```{r}
-runks <- Vectorize(function(cutoff) {
-  X <- mags[mags>cutoff]-cutoff
-  mu <- mean(X)
-  v <- var(X)
-  scale <- v/mu
-  shape <- mu^2/v
-  candidate <- rgamma(length(X),scale=scale,shape=shape)
-  ks.test(X,candidate)$p.value
-})
-cutoff <- seq(from=0.4,to=0.8,by=0.001)
-y <- runks(cutoff)
-plot(cutoff,y)
+library(fitdistrplus)
+cutoff <- 0.5
+X <- mags[mags>cutoff]
+fit.gamma <- fitdist(X,distr='gamma',
+                       method='mle',
+                       lower=c(0,0))
+
+print(summary(fit.gamma))
+plot(fit.gamma)
+```
+## Candidate: Lognormal distribution
+```{r}
+library(fitdistrplus)
+cutoff <- 0.5
+X <- mags[mags>cutoff]
+fit.lognorm <- fitdist(X,distr='lnorm',
+                       method='mle',
+                       lower=c(0,0))
+
+print(summary(fit.gamma))
+plot(fit.gamma)
 ```
 
 # References

@@ -1,3 +1,0 @@
-"0","quakes <- read.csv(""Quakes.csv"")"
-"0","mags <- quakes$Magnitude"
-"0","rm(quakes)"
