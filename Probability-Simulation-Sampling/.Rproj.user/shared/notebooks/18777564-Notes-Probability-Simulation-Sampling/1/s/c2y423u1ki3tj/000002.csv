@@ -1,2 +1,0 @@
-"0","X <- X[X>68]"
-"0","hist(X,breaks=30,freq=FALSE)"

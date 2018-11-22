@@ -1,6 +1,0 @@
-"0","run_experiment <- Vectorize("
-"0","  function(x=1) { #dummy variable x=1 here!"
-"0","    sample(c(0,1),1)"
-"0","  }"
-"0",")"
-"0","data <- run_experiment(1:20)"

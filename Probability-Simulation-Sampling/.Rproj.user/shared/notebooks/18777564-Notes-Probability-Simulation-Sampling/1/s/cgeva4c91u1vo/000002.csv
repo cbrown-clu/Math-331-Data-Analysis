@@ -1,7 +1,0 @@
-"0","countem <- Vectorize(function(x) {"
-"0","  sum(spots==x)"
-"0","})"
-"0","X <- 0:max(spots)"
-"0","temp <- countem(X)"
-"0","f <- temp/sum(temp)"
-"0","barplot(f)"
