@@ -9,6 +9,7 @@ Other folders in this repository include:
 * "C. Example scripts in R
 * "D. Example document source and output in RMarkdown
 * "E. Articles for Article reflection assignments
+* "F. Rubrics for homeworks, article reflections, course projects, and the course binder.
 
 ## Links to resources
 ### Resources for the course
