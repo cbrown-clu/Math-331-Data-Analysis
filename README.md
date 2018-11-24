@@ -47,9 +47,7 @@ The [Open Source Data Science Master's Degree curriculum](http://datasciencemast
 ### Planned additions for Spring 2019:
 * Add example R scripts for some basic tasks: I need a table connecting scripts and tasks, since some scripts may cover more than one task.
 * Exercises to accompany R for Beginners
-* Articles for article reflections
 * Projects
-* Rubrics for assignments, projects, etc.
 * RMarkdown examples.  These can be longer analyses.
 
 ### Planned additions for future iterations of the course:
