@@ -1,0 +1,24 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1545494195797.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3268359248",
+    "id" : "D086E9",
+    "lastKnownWriteTime" : 1545501881,
+    "last_content_update" : 1545501881785,
+    "path" : "~/GitHub/Math-331-Data-Analysis/A. Course reading materials/Descriptive Statistics and Graphics for Exploratory Data Analysis.Rmd",
+    "project_path" : "Descriptive Statistics and Graphics for Exploratory Data Analysis.Rmd",
+    "properties" : {
+        "cursorPosition" : "100,0",
+        "last_setup_crc32" : "AF5CBE26502e5298",
+        "scrollLine" : "76",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

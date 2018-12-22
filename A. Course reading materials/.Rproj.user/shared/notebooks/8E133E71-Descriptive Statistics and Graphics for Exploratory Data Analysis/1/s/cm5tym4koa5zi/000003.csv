@@ -1,0 +1,4 @@
+"0","hist(iris$Sepal.Length)
+"
+"2","Error in gzfile(file, ""wb"") : cannot open the connection
+"

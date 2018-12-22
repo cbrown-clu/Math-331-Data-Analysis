@@ -1,5 +1,5 @@
 ---
-title: 'R For Beginners: Exercises'
+title: 'Homework Set 1'
 author: "Dr. Christopher Brown"
 date: "November 9, 2018"
 output: pdf_document
@@ -14,24 +14,24 @@ knitr::opts_chunk$set(echo = TRUE,
 # Introduction
 
 \newpage
-# Chapter 1 Exercises
+# Exercises to Get Started
 **Exercise ** Install R.  [Link](https://cran.r-project.org/)
 
 **Exercise ** Install RStudio.  [Link](https://www.rstudio.com/products/rstudio/download/#download)
 
 **Exercise ** Open RStudio, and find an "Introduction to RStudio" tutorial on YouTube.  Orient yourself to the interface.
 
-**Exercise ** Install the tidyverse package set in R.  Get connected to the internet, open RStudio, visit the console, issue the command *install.packages("tidyverse")*, and set back and wait for a few minutes.
+**Exercise ** Install the tidyverse package set in R.  Get connected to the internet, open RStudio, visit the console, issue the command *install.packages("tidyverse")*, and sit back and wait for a few minutes.
 
 *Note:* At this point, between this install and the datasets in the course repository on Github, you should have everything you need for the exercises in this course.  For projects, you may have to install other packages or get other data sets depending on your needs.
 
 **Exercise ** (Optional) Get a Kaggle account at [https://www.kaggle.com/](https://www.kaggle.com/) .
 
-**Exercise ** (Optional, highly recommended for CSC majors, data scientists) Get a Github account at [https://github.com/](https://github.com/) .  Also download the Github Desktop software and install it.  Find a tutorial on using the commit, clone, push, and pull operations on repositories, and get an understanding of branching.
+**Exercise ** (Optional, highly recommended for CSC majors, aspiring data scientists) Get a Github account at [https://github.com/](https://github.com/) .  Also download the Github Desktop software and install it.  Find a tutorial on using the commit, clone, push, and pull operations on repositories, and get an understanding of branching.
 
 \newpage
-# Chapter 2 Exercises
-**Exercise ** Read Chapter 2 in R For Beginners.  Type in and execute the commands in the examples.
+# Exercises with Data
+You'll be using *R for Beginners* as a reference throughout these exercises.  However, you should also use Google!  The point of these exercises is not to mimic something from an example in a particular document; the point is to learn to carry out a particular task or deal with a particular concept.
 
 **Exercise **  Create a list of numbers from 0 to 1 with jumps of 0.01 and store it in *x* with the command
 ```{r}
@@ -39,29 +39,25 @@ x <- seq(from=0,to=1,by=0.01)
 ```
 What is the length of *x*?  Use the *length* command.  What is the first element in *x*?  Try *x[1]* and *head(x,1)*.  What is the last element in *x*?  Try *x[length(x)]* and *head(x,1)*.
 
-**Exercise ** Create a new list from *x* in the previous exercise using
+**Exercise ** Create a new list *y* from *x* in the previous exercise using
 ```{r}
 y <- x^2+2
 ```
-What did this command do?
+What did this command do?  If you're not using the word "function" in your explanation, go back and re-explain.
 
 **Exercise ** We are now finished with *x* and *y*.  Remove them from your R environment with the *rm* command.
 
-\newpage
-# Chapter 3 Exercises
+**Exercise ** Load the iris data set, using
+```{r}
+data("iris")
+```
 
+# Exercises with Graphics
 
-\newpage
-# Chapter 4 Exercises
+**Exercise ** Load the iris data set, using
+```{r}
+data("iris")
+```
+After you do, find it in the help system in R and read about it.  We'll be creating several graphics and charts from this data set.
 
-
-\newpage
-# Chapter 5 Exercises
-
-
-\newpage
-# Chapter 6 Exercises
-
-
-\newpage
-# Tidyverse Exercises
+**Exercise ** 
