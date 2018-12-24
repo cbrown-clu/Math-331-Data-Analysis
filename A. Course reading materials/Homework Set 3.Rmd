@@ -1,0 +1,35 @@
+---
+title: 'Homework Set 3'
+author: "Dr. Christopher Brown"
+date: "December 23, 2018"
+output: pdf_document
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+```
+
+# Introduction
+Welcome to the third homework set in the Data Analysis class.  In the exercise sets in this class, you should expect to be learning as you work, so if you come to an exercise and you don't know what to do off the top of your head, well...that's what is supposed to happen sometimes!
+
+My expectations for you in all homework assignments are:
+
+* You'll use available resources to work through the exercises.  Resources include the internet and each other.
+
+* You'll try to learn techniques, concepts, and R commands as you progress through the exercises.
+
+* You'll experiment a bit beyond the required exercises.
+\vspace{10mm}
+
+In this assignment, you'll be working from the packaet of notes **Probability, Simulation, Sampling**, available in the course repository in folder A. Course Reading Materials.  All the readings and exercises below refer to that note packet.
+
+* Read sections 0 and 1, and work exercises 1.1 through 1.12 at the end of section 1.  These are a mix of paper-and-pencil and R exercises.
+
+* Read section 2 and work exercises 2.1 through 2.11 at the end of section 2.
+
+* Read section 3 and work exercises 3.1 through 3.4 at the end of section 3.
+
+* Section 4 is optional.  It deals with selecting a distribution to model some data based on some metrics we have chosen.

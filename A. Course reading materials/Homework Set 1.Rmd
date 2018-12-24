@@ -19,20 +19,12 @@ My expectations for you in all homework assignments are:
 
 * You'll use available resources to work through the exercises.  Resources include the internet and each other.
 
-* You'll try to learn techniques, concepts, and R commands as you progress through the exercises.  In particular, if you copy work from someone else, odds are I won't be able to tell on this homework set...but I will on the next one, because you won't have built the skills you need to successfully progress through the course material.  So struggle with these exercises a bit, practice your "figuring it out" skills, and it will pay off in the long run.
+* You'll try to learn techniques, concepts, and R commands as you progress through the exercises.  Struggle with these exercises a bit, practice your "figuring it out" skills, and it will pay off in the long run.
 
 * You'll experiment a bit beyond the required exercises.  Messing around with the ideas you encounter in this exercise set will get you some more practice.  You may encounter situations you can't handle exactly as you did in these exercises, and you'll have to adapt...and this will help you immeasurably as we progress.
-\vfill
+\vspace{10mm}
 
-I've provided some R code examples in many exercises.  Just to be clear, this is not **the** R code to carry out the tasks, it is **some** R code to carry out these tasks.  Why do I say this?  Well, R is a programming language.  Every language has a few features:
-
-* Languages have syntax and structure, and you'll need to learn them.  At first you'll make errors when speaking any new language, and you'll also often speak in simpler sentences that convey simpler ideas than a fluent speaker.  As you become more proficient, you'll sound more fluent and you'll also be able to convey more complex ideas more efficiently.
-
-* There is more than one way to say most things in any language.  In programming languages, there is more than one way to carry out most tasks.  There are also "typical" ways to say things, so that even when a concept may be phrased in many ways, most people use just one or two that are accepted by speakers as "best".  In programming languages we call these "best practices".  For example, in R, we almost never use *for* loops explicitly, which may be distressing to those of you with some previous programming experience.
-
-* Languages have idioms, phrases whose meaning is not deducible from the individual words but whose meaning is nevertheless known to a fluent speaker (e.g. "It's raining cats and dogs!").  R has idioms as well.
-
-* Languages have dialects, which may include may include special idioms and best practices.  We'll be learning the basic R and **tidyverse** dialects in this course, which are by far the most common among data analysts.
+I've provided some R code examples in many exercises.  Just to be clear, this is not **the only** R code to carry out the tasks, it is **some workable** R code to carry out these tasks.
 
 \newpage
 
@@ -48,12 +40,14 @@ I've provided some R code examples in many exercises.  Just to be clear, this is
 
 *Note:* At this point, between this install and the datasets in the course repository on Github, you should have everything you need for the exercises in this course.  For projects, you may have to install other packages or get other data sets depending on your needs.
 
-**Exercise 4.5** (Optional, highly recommended for CSC majors, aspiring data scientists) Get a Github account at [https://github.com/](https://github.com/) .  Also download the Github Desktop software and install it.  Find a tutorial on using the commit, clone, push, and pull operations on repositories, and get an understanding of branching.
+**Exercise 4.1** (Optional, useful)  Install the GGally package with *install.packages("GGally")*.  This has a graphics function, *ggpairs*, that is highly useful in the initial exploration of a data set.
+
+**Exercise 4.2** (Optional, highly recommended for CSC majors, aspiring data scientists) Get a Github account at [https://github.com/](https://github.com/) .  Also download the Github Desktop software and install it.  Find a tutorial on using the commit, clone, push, and pull operations on repositories, and get an understanding of branching.
 
 \newpage
 # Exercises with Data
 
-You'll be using the *R for Beginners* document as a reference throughout these exercises.  However, you should also use Google!  The point of these exercises is not to mimic something from an example in a particular document; the point is to learn to carry out a particular task or deal with a particular concept.
+You'll be using the *R for Beginners* document as a reference throughout these exercises.  However, you should also use Google!  You may learn some new ways of doing things in R!
 
 **Exercise 5**  Create a vector of numbers from 0 to 1 with jumps of 0.01 and store it in *x* with the command
 ```{r}

@@ -1,0 +1,33 @@
+---
+title: 'Homework Set 4'
+author: "Dr. Christopher Brown"
+date: "December 23, 2018"
+output: pdf_document
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+```
+
+# Introduction
+Welcome to the fourth homework set in the Data Analysis class.  In the exercise sets in this class, you should expect to be learning as you work, so if you come to an exercise and you don't know what to do off the top of your head, well...that's what is supposed to happen sometimes!
+
+My expectations for you in all homework assignments are:
+
+* You'll use available resources to work through the exercises.  Resources include the internet and each other.
+
+* You'll try to learn techniques, concepts, and R commands as you progress through the exercises.
+
+* You'll experiment a bit beyond the required exercises.
+\vspace{10mm}
+
+In this homework set you'll be reading and working exercises from the ISLR book.  You can find a PDF copy of it in the course repository, in the folder "A. Course Reading Materials".
+
+* Skim chapter 2 of ISLR.
+
+* Read chapter 3 of ISLR.  Work through the lab on linear regression, section 3.6.  Then work exercises 1, 2, 3, 8, 9, 10, 13 at the end of chapter 3.
+
+* Read chapter 4 of ISLR.  Work through the lab in section 4.6.  Then work exercises 4, 10, and 11 at the end of chapter 4.

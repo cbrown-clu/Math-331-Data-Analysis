@@ -1,0 +1,31 @@
+---
+title: 'Homework Set 5'
+author: "Dr. Christopher Brown"
+date: "December 23, 2018"
+output: pdf_document
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+```
+
+# Introduction
+Welcome to the second homework set in the Data Analysis class.  In the exercise sets in this class, you should expect to be learning as you work, so if you come to an exercise and you don't know what to do off the top of your head, well...that's what is supposed to happen sometimes!
+
+My expectations for you in all homework assignments are:
+
+* You'll use available resources to work through the exercises.  Resources include the internet and each other.
+
+* You'll try to learn techniques, concepts, and R commands as you progress through the exercises.
+
+* You'll experiment a bit beyond the required exercises.
+\vspace{10mm}
+
+In this homework set you'll be reading and working exercises from the ISLR book.  You can find a PDF copy of it in the course repository, in the folder "A. Course Reading Materials".
+
+* Read chapter 8 of ISLR.  Work through the lab on decision trees, section 8.3.  Then work exercises 9 and 11 at the end of chapter 8.
+
+* Read sections 1 and 3 of chapter 10 of ISLR.  Work through lab 2 on clustering in section 10.5.  (If you are interested in genomic analysis, you should at least skim through lab 3 in section 10.6, but this is optional.)  Then work exercises 2, 9, and 11 at the end of chapter 10.
