@@ -1,0 +1,25 @@
+---
+title: "Article Reflection 3"
+author: "Dr. Christopher Brown"
+date: "December 24, 2018"
+output: pdf_document
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+For the third article reflection, read [Detecting lunar cycles in marine biology: periodic regression versus categorical ANOVAS](https://www.int-res.com/articles/meps2001/214/m214p307.pdf) by deBruyn and Meeuwig.
+
+For the reflection,
+
+* Outline the main points in the article.
+
+* What is the difference between what we might call "normal" regression and "periodic" regression?  This also brings up the point: what, really, *is* regression?  (Try Wikipedia!)
+
+* What evidence do the authors put forward to support their claim that periodic regression is effective at detecting lunar cycles?
+
+* Critique the use of graphics in the article.  Were they effective in conveying information?  What could have been done better?
+
+Your write-up should be typed, single-spaced, and less than 4 pages in length.

@@ -1,0 +1,25 @@
+---
+title: "Article Reflection 1"
+author: "Dr. Christopher Brown"
+date: "December 24, 2018"
+output: pdf_document
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+For the first article reflection, we'll be stretching the definition of an article a bit.  Watch [Professor Hans Rosling's TED talk](https://www.ted.com/talks/hans_rosling_shows_the_best_stats_you_ve_ever_seen?language=en).  
+
+You can read more about Rosling's work in Liberia's ebola outbreak [here](https://www.sciencemag.org/news/2014/12/star-statistician-hans-rosling-takes-ebola) and more about his life in his [obituary](https://www.nytimes.com/2017/02/09/world/europe/hans-rosling-dead-statistician.html).  You can find some online versions of the tools used in his TED talk at [Gapminder](https://www.gapminder.org/) (look for the "Try our new tools" section).
+
+For the reflection,
+
+* Outline the main points in the talk.
+
+* How effective were the graphics are conveying theose points?  Give examples of some graphical techniques you found particularly helpful in understanding the main points.
+
+* Near the end of the talk, Professor Rosling suggests that statisticians don't like these graphics, but he notes these are only intended to be "hypothesis-generating".  What is he talking about?
+
+Your write-up should be typed, single-spaced, and less than 4 pages in length.

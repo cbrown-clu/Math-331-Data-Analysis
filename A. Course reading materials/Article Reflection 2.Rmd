@@ -1,0 +1,29 @@
+---
+title: "Article Reflection 2"
+author: "Dr. Christopher Brown"
+date: "December 24, 2018"
+output: pdf_document
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+For the second article reflection, you'll be reading a classic article by Clauset, Shalizi, and Newman, [Power Law Distributions in Empirical Data](https://epubs.siam.org/doi/pdf/10.1137/070710111).  This article deals with a particular family of distributions called *power laws* which have gained some notoriety in the past few decades.  This article is fairly technical; you may not understand many of the fine details in the mathematics presented, and that's okay!  You should also feel free to skip the parts of the article dealing with *discrete* power laws; there is enough to worry about with continuous power law distributions.
+
+We have seen many of the themes in this article - estimating parameters from data, sampling schemes for distributions, numerical simulations as experiments - in homework set 2.
+
+For the reflection,
+
+* Outline the main points in the article.  What are the authors trying to accomplish, ultimately?
+
+* What are the parameters that must be estimated from data for continuous power law distributions?  What are some of the difficulties in estimating these?  Do you get the sense from the article that there is a "correct" way to estimate these parameters?
+
+* Why is it necessary to have statistical tests for determining whether a given distribution is a power law?
+
+* Reflect on the use of graphics in the article.  Are they effective?  What makes them effective if so, and if not, what could be improved?
+
+* What is the real-world takeaway from the article?  Which datasets seem to have power law distributions and which do not?
+
+Your write-up should be typed, single-spaced, and less than 4 pages in length.

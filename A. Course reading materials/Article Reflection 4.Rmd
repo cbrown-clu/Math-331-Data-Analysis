@@ -1,0 +1,25 @@
+---
+title: "Article Reflection 4"
+author: "Dr. Christopher Brown"
+date: "December 24, 2018"
+output: pdf_document
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+For the fourth article reflection, we'll take a look at the article [Predicting Exercise Behavior in Fitness Applications](http://repository.ittelkom-pwt.ac.id/3318/1/Predicting%20Exercise%20Behavior%20in%20Fitness%20Applications-%20A%20Multi-Gro.pdf).
+
+For the reflection,
+
+* Outline the main points in the article.
+
+* How was cluster analysis used in this study?
+
+* What was being predicted, and what role did the cluster analysis play in that prediction?
+
+* Critique the tables and graphics used in this article.
+
+Your write-up should be typed, single-spaced, and less than 4 pages in length.

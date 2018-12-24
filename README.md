@@ -4,12 +4,11 @@
 This is the repository for the Math 331 course.  In this folder you can find the grading scheme and course schedule.
 
 Other folders in this repository include:
-* "A. Course reading/viewing materials - includes the three main course texts and supplementary materials
+* "A. Course reading/viewing materials - includes the three main course texts and supplementary materials.  Also includes the homework assignments and article reflections.
 * "B. Data sets used in the class
 * "C. Example scripts in R
 * "D. Example document source and output in RMarkdown
-* "E. Articles for Article reflection assignments
-* "F. Rubrics for homeworks, article reflections, course projects, and the course binder.
+* "E. Rubrics for homeworks, article reflections, course projects, and the course binder.
 
 ## Links to resources
 ### Resources for the course
@@ -46,7 +45,6 @@ The [Open Source Data Science Master's Degree curriculum](http://datasciencemast
 
 ### Planned additions for Spring 2019:
 * Add example R scripts for some basic tasks: I need a table connecting scripts and tasks, since some scripts may cover more than one task. To include some basic statistical analyses, graphical and numerical tests.
-* Exercises to accompany R for Beginners
 * Projects
 * RMarkdown examples.  These can be longer analyses.  Should also include some simulation approaches to some common statistical tests.  This can help students understand what a given statistical test (e.g. t test) actually means.
 
