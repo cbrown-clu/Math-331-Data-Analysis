@@ -1,7 +1,4 @@
-table with row headers in column A and column headers in rows 3 through 4 (leading dots indicate sub-parts);;;;;;;;;;;;
-Annual Estimates of the Resident Population for Counties in California: April 1, 2010 to July 1, 2019;;;;;;;;;;;;
-Geographic Area;April 1, 2010;;Population Estimate (as of July 1);;;;;;;;;
-;Census;Estimates Base;2010;2011;2012;2013;2014;2015;2016;2017;2018;2019
+Area;Census Base;Estimates Base;2010;2011;2012;2013;2014;2015;2016;2017;2018;2019
 California;37,253,956;37,254,519;37,319,502;37,638,369;37,948,800;38,260,787;38,596,972;38,918,045;39,167,117;39,358,497;39,461,588;39,512,223
 .Alameda County, California;1,510,271;1,510,258;1,512,986;1,530,915;1,553,764;1,579,593;1,607,792;1,634,538;1,650,950;1,660,196;1,666,756;1,671,329
 .Alpine County, California;1,175;1,175;1,161;1,093;1,110;1,128;1,080;1,077;1,047;1,111;1,089;1,129
